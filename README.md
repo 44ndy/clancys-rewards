@@ -21,3 +21,18 @@ El trabajo se organiza con Scrum en sprints de dos semanas. Cada sprint es un mi
 | Sprint 2 | 9 – 20 nov | En la nube |
 | Sprint 3 | 23 nov – 4 dic | Privacidad y control |
 | Cierre | 7 – 11 dic | Producción y entrega |
+
+## Estructura del repositorio
+
+| Carpeta | Contenido |
+|---|---|
+| `frontend/` | App móvil (React Native + Expo) |
+| `backend/` | API (FastAPI) y datos del menú |
+| `docs/fase-1/` | Entregables de la Fase 1: guía de definición del proyecto, autoevaluación de competencias, cuestionario de reflexión, Carta Gantt (Word y archivo para Online Gantt) y presentación |
+| `docs/capturas/` | Capturas de pantalla de la app |
+
+## Metodología
+
+Se usa Scrum porque permite entregar avances funcionales cada dos semanas, recibir retroalimentación del docente y del local, y ajustar las prioridades en el siguiente sprint. El backlog se prioriza dejando primero lo que impide publicar la app (seguridad y despliegue), después lo que afecta al usuario y al final lo visual.
+
+Las tareas de cada sprint están registradas como issues en este repositorio.

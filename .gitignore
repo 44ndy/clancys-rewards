@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Expo / builds
+.expo/
+dist/
+web-build/
+*.apk
+*.aab
+
+# Variables de entorno y claves (nunca subir)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+google-services.json
+
+# Sistema
+.DS_Store
+Thumbs.db
