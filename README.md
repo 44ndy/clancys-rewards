@@ -41,8 +41,7 @@ clancys-rewards/
 | `1.1_Autoevaluacion_Competencias.docx` | Autoevaluación de las competencias del perfil de egreso |
 | `1.2_Diario_Reflexion.docx` | Diario de reflexión de la Fase 1 |
 | `1.5_Definicion_Proyecto_APT.docx` | Guía de definición del proyecto: fundamentación, objetivos, metodología, evidencias y plan de trabajo |
-| `Carta_Gantt.docx` | Carta Gantt en Word |
-| `Carta_Gantt.gantt` | Carta Gantt editable (se abre en onlinegantt.com con "Open .gantt file") |
+| `Carta_Gantt.gantt` | Carta Gantt del proyecto (se abre en onlinegantt.com con "Open .gantt file") |
 | `Presentacion_Fase1.pptx` | Presentación de la Fase 1 |
 
 ## Metodología
