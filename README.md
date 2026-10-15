@@ -24,12 +24,26 @@ El trabajo se organiza con Scrum en sprints de dos semanas. Cada sprint es un mi
 
 ## Estructura del repositorio
 
-| Carpeta | Contenido |
+```
+clancys-rewards/
+├── frontend/                 App móvil (React Native + Expo)
+├── backend/                  API (FastAPI) y datos del menú
+└── docs/
+    ├── fase-1/               Entregables de la Fase 1
+    ├── capturas/             Capturas de pantalla de la app
+    └── material-curso/       Material entregado por la asignatura
+```
+
+### Entregables de la Fase 1
+
+| Archivo | Descripción |
 |---|---|
-| `frontend/` | App móvil (React Native + Expo) |
-| `backend/` | API (FastAPI) y datos del menú |
-| `docs/fase-1/` | Entregables de la Fase 1: guía de definición del proyecto, autoevaluación de competencias, cuestionario de reflexión, Carta Gantt (Word y archivo para Online Gantt) y presentación |
-| `docs/capturas/` | Capturas de pantalla de la app |
+| `1.1_Autoevaluacion_Competencias.docx` | Autoevaluación de las competencias del perfil de egreso |
+| `1.2_Diario_Reflexion.docx` | Diario de reflexión de la Fase 1 |
+| `1.5_Definicion_Proyecto_APT.docx` | Guía de definición del proyecto: fundamentación, objetivos, metodología, evidencias y plan de trabajo |
+| `Carta_Gantt.docx` | Carta Gantt en Word |
+| `Carta_Gantt.gantt` | Carta Gantt editable (se abre en onlinegantt.com con "Open .gantt file") |
+| `Presentacion_Fase1.pptx` | Presentación de la Fase 1 |
 
 ## Metodología
 
