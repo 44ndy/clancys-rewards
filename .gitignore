@@ -23,3 +23,49 @@ google-services.json
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Cachés de herramientas
+.metro-cache/
+.ruff_cache/
+.metro-health-check*
+*.tsbuildinfo
+
+# Runtime del backend (se generan solos)
+logs/
+exports/
+uploads/
+*.log
+
+# Copias de respaldo y archivos sueltos
+*.bak
+*.bak-*
+README.plantilla.local.md
+
+# Archivos de trabajo (no son parte de la app)
+.impeccable/
+.agents/
+memory/
+skills-lock.json
+test_result.md
+
+# Documentos de trabajo de la raíz (los entregables viven en docs/)
+AI_HANDOFF.md
+PRODUCT.md
+design-brief-*.md
+design_guidelines.json
+
+# Scripts atados a mi máquina Windows, no a la app
+INICIAR-backend.cmd
+DETENER-backend.cmd
+backend/run-server.cmd
+backend/demo_seed.py
+
+# Restos de la plantilla que la app no usa
+frontend/assets/images/_backup-template/
+
+# Stub vacío
+tests/
+
+# Suite de pruebas obsoleta: apunta a la URL de la plantilla y prueba Stripe y
+# reservas, que ya no existen. Hay que reescribirla antes de subirla.
+backend/tests/

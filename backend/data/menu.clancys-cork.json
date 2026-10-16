@@ -1,0 +1,119 @@
+{
+  "_meta": {
+    "source": "Texto completo del menú entregado por el cliente el 2026-09-08 (transcripción de la web oficial de Clancy's Cork, sección OUR MENUS).",
+    "currency": "EUR",
+    "structure": "SERVICIO (Breakfast / Lunch / Dinner / Dessert) → PLATO (Starters, Mains, Salads & Sandwiches, Sides). Breakfast y Dessert no tienen subsecciones.",
+    "counts": { "Breakfast": 5, "Lunch": 13, "Dinner": 21, "Dessert": 4, "total": 43 },
+    "notes": [
+      "Seafood Chowder: €14 en Lunch, €13 en Dinner. Smash Burger: €20 Lunch, €22 Dinner. Fish & Chips: €20 Lunch, €21 Dinner. Cottage Pie: €18 Lunch, €20 Dinner. Son precios distintos por servicio en la fuente; se transcriben tal cual.",
+      "'Bacon & Cabbage with Champ' (Lunch) dice 'based potato' en la fuente; se transcribe verbatim. Probablemente 'baked' o 'mashed' — confirmar con el cliente.",
+      "La fuente escribe 'Créme Brûlée'; se transcribe con la ortografía correcta 'Crème Brûlée'.",
+      "Nada de este archivo fue inventado. Ítems sin descripción en la fuente quedan sin descripción."
+    ]
+  },
+  "services": [
+    {
+      "service": "Breakfast",
+      "courses": [
+        {
+          "course": null,
+          "items": [
+            { "name": "Clancy's Full Irish Breakfast", "price": 15.0, "description": "2 Jumbo sausages, 2 smoked bacon, eggs of your choice, beans, mushrooms, fried hash brown, fried mushrooms, black and white pudding - tea/coffee and toast included" },
+            { "name": "Smashed Avocado", "price": 14.0, "description": "Spiced avocado with gently fried mushrooms and poached eggs on crispy sourdough toast, topped off with sweet red pepper drops" },
+            { "name": "Eggs Benedict", "price": 11.0, "description": "Crispy smoked bacon with 2 poached eggs covered in a house made hollandaise sauce on crispy sourdough toast" },
+            { "name": "Granola Yogurt Bowl", "price": 8.0, "description": "Served with glazed oats, vanilla and honey Greek yogurt, with a mix berries compote and fresh berries finish" },
+            { "name": "Selection of Scones and Pastries", "price": 3.5, "description": null }
+          ]
+        }
+      ]
+    },
+    {
+      "service": "Lunch",
+      "courses": [
+        {
+          "course": "Starters",
+          "items": [
+            { "name": "Soup of the Day", "price": 8.0, "description": "Served with soda bread" },
+            { "name": "Seafood Chowder", "price": 14.0, "description": "Mixed seafood, creamy velouté, served with soda bread" },
+            { "name": "Sweet & Spicy Buffalo or Hickory BBQ Wings", "price": 12.0, "description": "Blue cheese dip and celery" },
+            { "name": "Mushroom Bruschetta", "price": 11.2, "description": "Creamy mushrooms and spinach piled high on sourdough" },
+            { "name": "Clonakilty Black Pudding & Pork Sausage Roll", "price": 12.8, "description": "Salad garnish with sweet apple ketchup" }
+          ]
+        },
+        {
+          "course": "Mains",
+          "items": [
+            { "name": "Smash Burger", "price": 20.0, "description": "Two 100% Irish beef 3oz burgers, cheddar cheese, gherkins, lettuce, tomato, and crispy onions, served with chips and salad" },
+            { "name": "Fish & Chips", "price": 20.0, "description": "Deep fried haddock in a crispy batter, mushy peas, tartar sauce and fries" },
+            { "name": "Lamb & Guinness Stew", "price": 22.0, "description": "Chunks of braised lamb, rich gravy, root vegetables stewed for 8 hours, served on a bed of champ with soda bread" },
+            { "name": "Bacon & Cabbage with Champ", "price": 22.0, "description": "Glazed bacon, savoy cabbage, based potato, served with parsley sauce" },
+            { "name": "Bean & Barley Cottage Pie", "price": 18.0, "description": "Braised butter beans, barley and root vegetables, topped with mash potato, served with chips and salad" }
+          ]
+        },
+        {
+          "course": "Salads & Sandwiches",
+          "items": [
+            { "name": "Toasted Special", "price": 13.0, "description": "Ham, relish, cheese, onion and tomato, served with chips and salad" },
+            { "name": "Classic Caesar Salad", "price": 19.2, "description": "Chicken, bacon, croutons, cos lettuce, caesar dressing finished with parmesan cheese" },
+            { "name": "Clancy's Club Sandwich", "price": 15.0, "description": "Chicken, bacon, fried egg, lettuce and tomato, served with chips and salad" }
+          ]
+        }
+      ]
+    },
+    {
+      "service": "Dinner",
+      "courses": [
+        {
+          "course": "Starters",
+          "items": [
+            { "name": "Soup of the Day", "price": 8.0, "description": "Served with soda bread" },
+            { "name": "Seafood Chowder", "price": 13.0, "description": "Mixed seafood, creamy velouté, served with soda bread" },
+            { "name": "Calamari", "price": 14.0, "description": "Deep fried panko Calamari rings, with lime and chilli aioli and salad" },
+            { "name": "Scallops & Clonakilty Black Pudding", "price": 16.0, "description": "Seared scallops with black pudding pieces, with chive celeriac puree" },
+            { "name": "Sweet & Spicy Buffalo or Hickory BBQ Wings", "price": 12.0, "description": "Blue cheese dip and celery" },
+            { "name": "Ham Hock Croquettes", "price": 12.0, "description": "Ham hocks mix with potato and spring onion, with charred onion puree" },
+            { "name": "Garlic Mushrooms", "price": 11.0, "description": "Panko breaded Portobello mushrooms, mix leaf and vegan aioli" },
+            { "name": "Potato & Cheddar Bon Bons", "price": 10.0, "description": "Mixed potato and Cheddar, Cheddar ale sauce and chives" }
+          ]
+        },
+        {
+          "course": "Mains",
+          "items": [
+            { "name": "Smash Burger", "price": 22.0, "description": "Two 100% Irish beef 3oz burgers, cheddar cheese, gherkins, lettuce, tomato, and crispy onions, served with chips and salad" },
+            { "name": "Fish & Chips", "price": 21.0, "description": "Deep fried haddock in a crispy batter, mushy peas, tartar sauce and fries" },
+            { "name": "Bacon & Cabbage", "price": 21.0, "description": "Glazed bacon, Savoy cabbage, mashed potato served with parsley sauce" },
+            { "name": "Chicken Supreme", "price": 23.0, "description": "Served with chicken thigh ballotine, gratin, broccoli served with a cabbage and mustard veloute" },
+            { "name": "Featherblade", "price": 24.0, "description": "12 Hour braised featherblade, peppercorn crust, creamy mash, root vegetables, roastie and beef gravy" },
+            { "name": "Surf and Turf", "price": 38.0, "description": "Sirloin steak cooked to your liking, seared prawns, chimichurri, gratin, broccoli and fries" },
+            { "name": "Creamy Tomato Veloute", "price": 22.0, "description": "Chicken or veg, tagliatelle cherry tomatoes, spinach served with garlic bread" },
+            { "name": "Bean & Barley Cottage Pie", "price": 20.0, "description": "Braised butter beans, barley and root vegetables, topped with mash potato, served with chips and salad" }
+          ]
+        },
+        {
+          "course": "Sides",
+          "items": [
+            { "name": "Rustic Chips", "price": 5.0, "description": "Gluten free available" },
+            { "name": "Mash Potatoes", "price": 5.0, "description": null },
+            { "name": "Onion Rings", "price": 6.0, "description": null },
+            { "name": "Root Vegetables", "price": 5.0, "description": null },
+            { "name": "Tender Stem Broccoli", "price": 5.0, "description": null }
+          ]
+        }
+      ]
+    },
+    {
+      "service": "Dessert",
+      "courses": [
+        {
+          "course": null,
+          "items": [
+            { "name": "Rhubarb Bread & Butter Pudding", "price": 8.5, "description": null },
+            { "name": "Apple & Blueberry Crumble", "price": 8.5, "description": null },
+            { "name": "Crème Brûlée", "price": 8.5, "description": null },
+            { "name": "Oreo Cheesecake", "price": 8.5, "description": null }
+          ]
+        }
+      ]
+    }
+  ]
+}

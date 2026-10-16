@@ -1,0 +1,28 @@
+# Dependencias del backend de Clancy's Rewards.
+# Instalar con:  pip install -r requirements.txt
+
+# API
+fastapi==0.141.1
+uvicorn==0.52.4
+starlette==1.6.0
+python-multipart==0.0.30
+
+# Base de datos
+motor==3.7.1
+pymongo==4.18.0
+
+# Validación y configuración
+pydantic==2.13.5
+email-validator==2.3.0
+python-dotenv==1.2.3
+
+# Autenticación
+PyJWT==2.13.0
+bcrypt==5.0.0
+google-auth==2.57.1
+# google-auth verifica el ID token de Google a través de este transporte, y no
+# lo instala solo: sin requests, el backend ni siquiera importa.
+requests==2.34.2
+
+# Cliente HTTP (notificaciones push)
+httpx==0.28.1
