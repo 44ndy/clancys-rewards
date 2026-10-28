@@ -25,7 +25,7 @@ flowchart LR
 
 | Requisito | Qué significa para la app | Dónde queda |
 |---|---|---|
-| Cuenta de Apple Developer Program | 99 USD al año. Inscripción individual con cuenta de Apple con verificación en dos pasos y nombre legal | Sprint 2 |
+| Cuenta de Apple Developer Program | 99 USD al año. Inscripción individual con cuenta de Apple con verificación en dos pasos y nombre legal | Sprint 1 |
 | Inicio de sesión con Apple | Como la app ofrece login con Google, en iOS debe ofrecer también una opción equivalente que proteja la privacidad, como "Iniciar sesión con Apple" (guía 4.8) | RF-16, Sprint 2 |
 | Borrado de cuenta dentro de la app | Ya estaba planificado por el RGPD | RF-15, Sprint 3 |
 | Privacidad | Política de privacidad pública y etiqueta de privacidad en la ficha de App Store | RNF-08 y RNF-12, Sprint 3 |
@@ -36,14 +36,14 @@ flowchart LR
 
 | Sprint | Tarea | Issue | Por qué va ahí |
 |---|---|---|---|
-| Sprint 2 | Inscripción en Apple Developer Program | [#65](https://github.com/44ndy/clancys-rewards/issues/65) | La verificación de la cuenta puede tardar; debe estar lista antes del primer build |
+| Sprint 1 | Inscripción en Apple Developer Program | [#65](https://github.com/44ndy/clancys-rewards/issues/65) | Se adelantó del Sprint 2: la verificación de la cuenta puede tardar y bloquea el primer build de iOS |
 | Sprint 2 | HU-20: inicio de sesión con Apple | [#66](https://github.com/44ndy/clancys-rewards/issues/66) | Junto con el login con Google (HU-02), que ya estaba en este sprint |
 | Sprint 2 | Build de iOS con EAS y prueba interna en TestFlight | [#67](https://github.com/44ndy/clancys-rewards/issues/67) | Al mismo tiempo que el build de Android, para probar las dos versiones desde el inicio |
 | Sprint 3 | Ficha de App Store: capturas, privacidad y permisos | [#68](https://github.com/44ndy/clancys-rewards/issues/68) | Se hace junto con la política de privacidad del RGPD |
 | Sprint 3 | Prueba en TestFlight con iPhones del personal y conocidos | [#69](https://github.com/44ndy/clancys-rewards/issues/69) | En paralelo a la prueba cerrada de Google Play |
 | Cierre | Envío a revisión de Apple y publicación en App Store | [#70](https://github.com/44ndy/clancys-rewards/issues/70) | Junto con el paso a producción en Google Play |
 
-Para no pasar los 13 puntos del Sprint 2, la tarea "Imágenes en almacenamiento de objetos" (#49) pasa al Sprint 3, porque no impide publicar.
+Para no sobrecargar el Sprint 2, la tarea "Imágenes en almacenamiento de objetos" (#49) pasa al Sprint 3, porque no impide publicar, y la inscripción en Apple (#65) se adelanta al Sprint 1.
 
 ## Costos
 
