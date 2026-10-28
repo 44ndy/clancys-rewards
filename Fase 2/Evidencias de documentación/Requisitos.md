@@ -2,7 +2,9 @@
 
 Proyecto: Clancy's Rewards · Capstone, Fase 2 · Estado al 28 de octubre de 2026.
 
-Los requisitos salen del análisis del proceso de atención de Clancy's Cork, donde trabajo, y de las historias de usuario del backlog. Cada requisito pendiente está asociado a un issue del repositorio.
+La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.xlsx)**: 26 requisitos con descripción, actor, prioridad, criterio de aceptación, origen, estado, sprint, issue y evidencia en el sistema; un resumen por estado; y la hoja de requisitos técnicos con las herramientas, tecnologías, servicios y costos. Esta página resume la misma información.
+
+**Estado:** 14 implementados, 1 parcial y 11 pendientes; cada pendiente tiene su sprint e issue.
 
 ## Actores
 
@@ -14,35 +16,36 @@ Los requisitos salen del análisis del proceso de atención de Clancy's Cork, do
 
 ## Requisitos funcionales
 
-| ID | Requisito | Rol | Estado |
-|---|---|---|---|
-| RF1 | Registro e inicio de sesión con correo y contraseña, o con una cuenta de Google | Cliente | Listo en el prototipo (Google de punta a punta: #50, Sprint 2) |
-| RF2 | Tarjeta de socio con las visitas acumuladas y el avance hacia el próximo premio | Cliente | Listo |
-| RF3 | Código QR personal que vence a los 3 minutos y sirve una sola vez | Cliente | Listo |
-| RF4 | Escaneo del QR con la cámara para sumar una visita | Personal | Listo |
-| RF5 | Canje de premios en dos pasos: el escaneo reserva el premio y quien lo lleva a la mesa confirma la entrega | Personal | Listo |
-| RF6 | Menú del local por servicio y sección, con disponibilidad | Cliente / Administrador | Listo (43 platos reales) |
-| RF7 | Crear, editar y desactivar premios y promociones | Administrador | Listo |
-| RF8 | Panel con indicadores: clientes, socios activos, visitas del día y de la semana, premios más canjeados | Administrador | Listo |
-| RF9 | Gestión del personal y de sus roles | Administrador (dueño) | Listo |
-| RF10 | Confirmar antes de borrar, con opción de deshacer | Administrador | Pendiente (#43, Sprint 1) |
-| RF11 | Mensajes de error visibles y opción de reintentar | Todos | Pendiente (#44, Sprint 1) |
-| RF12 | Recuperación de contraseña por correo | Cliente | Pendiente (#57, Sprint 3) |
-| RF13 | Tiempo mínimo entre dos visitas del mismo cliente | Personal | Pendiente (#56, Sprint 3) |
-| RF14 | Registro de qué empleado validó cada visita, visible para el dueño | Administrador | Parcial: se guarda en la base de datos; falta la vista (#55, Sprint 3) |
-| RF15 | Exportar y borrar la cuenta, y aceptar la política de privacidad | Cliente | Pendiente (#54, Sprint 3) |
+| ID | Requisito | Actor | Prioridad | Criterio de aceptación | Estado | Sprint | Issue |
+|---|---|---|---|---|---|---|---|
+| RF-01 | Registro con correo y contraseña | Cliente | Alta | Con un correo no registrado y una contraseña de al menos 6 caracteres, se crea la cuenta y su membresía. Con un correo ya registrado, se muestra un error. | Implementado | Prototipo | — |
+| RF-02 | Inicio de sesión con correo o con Google | Todos | Alta | Con credenciales válidas se entrega un token de sesión; con credenciales inválidas se responde error 401; una cuenta desactivada no puede entrar. | Parcial | Sprint 2 | [#50](https://github.com/44ndy/clancys-rewards/issues/50) |
+| RF-03 | Tarjeta de socio | Cliente | Alta | La tarjeta muestra el número de visitas y el próximo premio según las visitas requeridas. | Implementado | Prototipo | — |
+| RF-04 | QR personal de un solo uso | Cliente | Alta | El QR vence a los 3 minutos (180 s) y deja de servir después de escanearse una vez. | Implementado | Prototipo | — |
+| RF-05 | Escaneo del QR y suma de visita | Personal | Alta | Solo un rol de personal puede escanear. Un QR vencido o ya usado se rechaza. La visita queda registrada con el empleado que la validó. | Implementado | Prototipo | — |
+| RF-06 | Canje de premios en dos pasos | Cliente / Personal | Alta | Sin visitas suficientes el canje se rechaza. El canje queda "pendiente" hasta confirmar la entrega, y confirmar dos veces no lo duplica. | Implementado | Prototipo | — |
+| RF-07 | Menú del local | Cliente | Media | Se muestran los platos disponibles ordenados por servicio y sección. | Implementado | Prototipo | — |
+| RF-08 | Gestión de menú, premios y promociones | Administrador | Alta | Solo los roles de administración pueden editar. Los cambios se ven en la app del cliente sin publicar una nueva versión. | Implementado | Prototipo | — |
+| RF-09 | Panel de indicadores | Administrador | Media | El panel muestra los indicadores calculados desde los registros reales de visitas y canjes. | Implementado | Prototipo | — |
+| RF-10 | Gestión del personal | Dueño | Media | Solo el dueño accede a esta función; un empleado desactivado no puede iniciar sesión. | Implementado | Prototipo | — |
+| RF-11 | Confirmar antes de borrar y deshacer | Administrador | Media | Ninguna eliminación ocurre sin confirmar; durante unos segundos se puede deshacer. | Pendiente | Sprint 1 | [#43](https://github.com/44ndy/clancys-rewards/issues/43) |
+| RF-12 | Mensajes de error y reintentar | Todos | Media | Cada error de red muestra un mensaje en pantalla con un botón para reintentar. | Pendiente | Sprint 1 | [#44](https://github.com/44ndy/clancys-rewards/issues/44) |
+| RF-13 | Recuperación de contraseña | Cliente | Media | Al solicitarlo, llega un enlace al correo que permite definir una nueva contraseña. | Pendiente | Sprint 3 | [#57](https://github.com/44ndy/clancys-rewards/issues/57) |
+| RF-14 | Tiempo mínimo entre visitas | Personal | Media | Un segundo escaneo del mismo cliente dentro del intervalo configurado se rechaza. | Pendiente | Sprint 3 | [#56](https://github.com/44ndy/clancys-rewards/issues/56) |
+| RF-15 | Exportar y borrar la cuenta | Cliente | Alta | El cliente obtiene un archivo con sus datos y, al borrar la cuenta, sus datos personales se eliminan. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
 
 ## Requisitos no funcionales
 
-| ID | Tipo | Requisito | Estado |
-|---|---|---|---|
-| RNF1 | Seguridad | Contraseñas guardadas con bcrypt; sesión con token JWT; permisos por rol validados en el servidor | Listo |
-| RNF2 | Seguridad | Ninguna credencial en el código; configuración por variables de entorno | Listo (Sprint 0) |
-| RNF3 | Seguridad | Sin endpoints que expongan el código o datos internos | Listo (Sprint 0, adelantado) |
-| RNF4 | Seguridad | Límite de intentos en el login y en el escaneo; CORS solo para orígenes reales | Pendiente (#41, #42, Sprint 1) |
-| RNF5 | Usabilidad | Botones táctiles de al menos 44 px en el panel de administración | Pendiente (#45, Sprint 1) |
-| RNF6 | Disponibilidad | API en la nube con HTTPS y base de datos con respaldo diario, en la Unión Europea | Pendiente (#47, #48, Sprint 2) |
-| RNF7 | Privacidad | Cumplimiento del RGPD: consentimiento, acceso y eliminación de datos | Pendiente (#54, Sprint 3) |
-| RNF8 | Calidad | Pruebas automatizadas del backend y del frontend, y prueba de usuario con el personal | Pendiente (#58, #59) |
-| RNF9 | Compatibilidad | App para Android publicada en Google Play | Pendiente (#51, #60) |
-| RNF10 | Mantenibilidad | Código versionado en Git, con el menú y los premios como datos editables, no como código | Listo |
+| ID | Requisito | Actor | Prioridad | Criterio de aceptación | Estado | Sprint | Issue |
+|---|---|---|---|---|---|---|---|
+| RNF-01 | Contraseñas cifradas | Sistema | Alta | En la base de datos solo existe el campo password_hash. | Implementado | Prototipo | — |
+| RNF-02 | Sesiones con token JWT | Sistema | Alta | Una petición sin token o con un token vencido se responde con error 401. | Implementado | Prototipo | — |
+| RNF-03 | Permisos por rol en el servidor | Sistema | Alta | Un cliente que llama a una ruta de administración recibe error 403. | Implementado | Prototipo | — |
+| RNF-04 | Credenciales fuera del código | Sistema | Alta | El repositorio no contiene ninguna credencial; existe un .env.example sin valores. | Implementado | Sprint 0 | [#36](https://github.com/44ndy/clancys-rewards/issues/36) |
+| RNF-05 | Límite de intentos y CORS restringido | Sistema | Alta | Tras varios intentos fallidos la API responde error 429; un origen no autorizado es rechazado. | Pendiente | Sprint 1 | [#42](https://github.com/44ndy/clancys-rewards/issues/42) |
+| RNF-06 | Botones táctiles accesibles | Administrador | Media | Todos los botones del panel cumplen el tamaño mínimo. | Pendiente | Sprint 1 | [#45](https://github.com/44ndy/clancys-rewards/issues/45) |
+| RNF-07 | Servidor en la nube con HTTPS | Sistema | Alta | La app de producción se conecta por HTTPS y la base tiene respaldo automático. | Pendiente | Sprint 2 | [#47](https://github.com/44ndy/clancys-rewards/issues/47) |
+| RNF-08 | Cumplimiento del RGPD | Cliente | Alta | El registro exige aceptar la política; el cliente puede exportar y borrar sus datos. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
+| RNF-09 | App Android en Google Play | Sistema | Alta | La app pasa la prueba cerrada de 14 días con al menos 12 testers y queda publicada. | Pendiente | Sprint 2 y cierre | [#51](https://github.com/44ndy/clancys-rewards/issues/51) |
+| RNF-10 | Contenido como datos | Administrador | Media | Agregar un plato o un premio no requiere publicar una nueva versión de la app. | Implementado | Prototipo | — |
+| RNF-11 | Pruebas automatizadas | Sistema | Alta | La suite de pruebas corre sin errores antes de cada entrega. | Pendiente | Sprint 3 | [#58](https://github.com/44ndy/clancys-rewards/issues/58) |

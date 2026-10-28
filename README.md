@@ -82,7 +82,7 @@ clancys-rewards/
 │   ├── Evidencias Individuales/       2.1 Diario de reflexión, 2.2 Autoevaluación de avance
 │   ├── Evidencias Grupales/           2.3 Formativa, 2.4 Informe de avance y planillas
 │   ├── Evidencias Proyecto/           Presentación del avance
-│   ├── Evidencias de documentación/   Requisitos, arquitectura, metodología y backlog
+│   ├── Evidencias de documentación/   Matriz de requisitos (Excel), arquitectura, metodología y backlog
 │   └── Evidencias de sistema/
 │       ├── Aplicación/                Capturas de la app funcionando
 │       └── Base de datos/             Modelo de datos
@@ -97,7 +97,7 @@ clancys-rewards/
 | 1 | Definición del Proyecto APT, presentación y Carta Gantt | `Fase 1/Evidencias Grupales/` |
 | 2 | Informe de avance (guía 2.4) | `Fase 2/Evidencias Grupales/` |
 | 2 | Diario de reflexión y autoevaluación de avance | `Fase 2/Evidencias Individuales/` |
-| 2 | Requisitos, arquitectura y metodología | `Fase 2/Evidencias de documentación/` |
+| 2 | Matriz de requisitos (Excel), arquitectura y metodología | `Fase 2/Evidencias de documentación/` |
 | 2 | Capturas de la app y modelo de datos | `Fase 2/Evidencias de sistema/` |
 | 2 | Presentación del avance | `Fase 2/Evidencias Proyecto/` |
 
