@@ -25,7 +25,7 @@ La regla es simple: primero lo que impide publicar, después lo que afecta al us
 | Sprint 0 | 19 – 23 oct | Configuración | Sin control de versiones ni credenciales seguras no se puede trabajar en orden | Completado (falta la autorización escrita de marca) |
 | Sprint 1 | 26 oct – 6 nov | Seguro y confiable | Con vulnerabilidades abiertas la app no se puede publicar | En curso |
 | Sprint 2 | 9 – 20 nov | En la nube | Google Play exige 14 días de prueba cerrada antes de publicar, así que debe empezar a tiempo | No iniciado |
-| Sprint 3 | 23 nov – 4 dic | Privacidad y pruebas | El RGPD y las pruebas son requisito antes de abrir la app al público | No iniciado |
+| Sprint 3 | 23 nov – 4 dic | Privacidad y control | El RGPD y las pruebas son requisito antes de abrir la app al público | No iniciado |
 | Cierre | 7 – 11 dic | Producción y entrega | Prueba con el personal del local, publicación e informe final | No iniciado |
 
 ## Ajustes hechos en la Fase 2
