@@ -24,9 +24,9 @@ La regla es simple: primero lo que impide publicar, después lo que afecta al us
 |---|---|---|---|---|
 | Sprint 0 | 19 – 23 oct | Configuración | Sin control de versiones ni credenciales seguras no se puede trabajar en orden | Completado (falta la autorización escrita de marca) |
 | Sprint 1 | 26 oct – 6 nov | Seguro y confiable | Con vulnerabilidades abiertas la app no se puede publicar | En curso |
-| Sprint 2 | 9 – 20 nov | En la nube | Google Play exige 14 días de prueba cerrada antes de publicar, así que debe empezar a tiempo | No iniciado |
+| Sprint 2 | 9 – 20 nov | En la nube, Android e iOS | Google Play exige 14 días de prueba cerrada y Apple una cuenta verificada y TestFlight, así que deben empezar a tiempo | No iniciado |
 | Sprint 3 | 23 nov – 4 dic | Privacidad y control | El RGPD y las pruebas son requisito antes de abrir la app al público | No iniciado |
-| Cierre | 7 – 11 dic | Producción y entrega | Prueba con el personal del local, publicación e informe final | No iniciado |
+| Cierre | 7 – 11 dic | Producción y entrega | Prueba con el personal del local, publicación en Google Play y App Store, e informe final | No iniciado |
 
 ## Ajustes hechos en la Fase 2
 
@@ -35,5 +35,6 @@ La regla es simple: primero lo que impide publicar, después lo que afecta al us
 3. La rotación de claves pasó al Sprint 2, cuando se cree el ambiente de producción.
 4. Se usa la bitácora entregada por la asignatura en lugar de un formato propio.
 5. Desde el Sprint 1, cada historia se desarrolla en su propia rama y se integra al terminar.
+6. **Publicación también en App Store (iOS)**, por la retroalimentación docente: casi la mitad de los teléfonos en Irlanda usa iOS. Se compila en la nube con EAS Build, sin Mac. Se agregan la cuenta de Apple, el inicio de sesión con Apple, el build de iOS con TestFlight y la ficha de App Store; la tarea de imágenes (#49) pasa al Sprint 3. Detalle en [Plan de publicación en iOS](Plan_publicacion_iOS.md).
 
 La Carta Gantt completa está en `Fase 1/Evidencias Grupales/` y se abre en onlinegantt.com.

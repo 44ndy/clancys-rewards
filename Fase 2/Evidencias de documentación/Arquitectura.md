@@ -4,7 +4,7 @@ Clancy's Rewards usa una arquitectura cliente-servidor en tres capas: una app m�
 
 ```mermaid
 flowchart LR
-    subgraph Telefono["Teléfono Android"]
+    subgraph Telefono["Teléfono Android o iPhone"]
         APP["App móvil<br/>React Native + Expo (TypeScript)<br/>cliente · personal · administrador"]
     end
     subgraph Servidor["Servidor"]
@@ -29,7 +29,7 @@ flowchart LR
 | App móvil | React Native, Expo, expo-router, TypeScript | Una sola app con tres grupos de pantallas según el rol: `(tabs)` para el cliente, `(staff)` para el personal y `admin` para la administración. Usa la cámara para leer el QR y guarda la sesión en almacenamiento seguro. |
 | API REST | Python, FastAPI, Pydantic | Reglas del negocio: registro y login, generación y validación de QR, suma de visitas, canjes, menú, premios, promociones, personal e indicadores. Valida los datos de entrada y los permisos de cada rol. |
 | Base de datos | MongoDB con el driver Motor | Guarda usuarios, membresías, visitas, QR, canjes y contenido del local. Los QR y las sesiones vencen solos con índices TTL. |
-| Servicios externos | Google Sign-In, notificaciones push | Inicio de sesión con Google y avisos cuando el cliente desbloquea un premio. |
+| Servicios externos | Google Sign-In, notificaciones push | Inicio de sesión con Google y avisos cuando el cliente desbloquea un premio. En iOS se suma el inicio de sesión con Apple (Sprint 2). |
 
 ## Flujo de una visita
 
@@ -67,6 +67,7 @@ sequenceDiagram
 | API | Local, en el computador de desarrollo | Render o Railway, con HTTPS, región europea |
 | Base de datos | MongoDB local | MongoDB Atlas en la Unión Europea, con respaldo diario |
 | Imágenes | Carpeta local del servidor | Almacenamiento de objetos |
-| App | Expo en modo desarrollo | Build de producción con EAS y prueba cerrada en Google Play |
+| App Android | Expo en modo desarrollo | Build de producción con EAS y prueba cerrada en Google Play |
+| App iOS | No existe aún | Build de iOS con EAS en la nube (sin Mac), TestFlight y App Store |
 
 Los datos se alojan en la Unión Europea porque la app trata datos personales de clientes en Irlanda y debe cumplir el RGPD.

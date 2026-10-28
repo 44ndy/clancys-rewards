@@ -2,9 +2,9 @@
 
 Proyecto: Clancy's Rewards · Capstone, Fase 2 · Estado al 28 de octubre de 2026.
 
-La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.xlsx)**: 26 requisitos con descripción, actor, prioridad, criterio de aceptación, origen, estado, sprint, issue y evidencia en el sistema; un resumen por estado; y la hoja de requisitos técnicos con las herramientas, tecnologías, servicios y costos. Esta página resume la misma información.
+La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.xlsx)**: 28 requisitos con descripción, actor, prioridad, criterio de aceptación, origen, estado, sprint, issue y evidencia en el sistema; un resumen por estado; y la hoja de requisitos técnicos con las herramientas, tecnologías, servicios y costos. Esta página resume la misma información.
 
-**Estado:** 14 implementados, 1 parcial y 11 pendientes; cada pendiente tiene su sprint e issue.
+**Estado:** 14 implementados, 1 parcial y 13 pendientes; cada pendiente tiene su sprint e issue.
 
 ## Actores
 
@@ -33,6 +33,7 @@ La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.x
 | RF-13 | Recuperación de contraseña | Cliente | Media | Al solicitarlo, llega un enlace al correo que permite definir una nueva contraseña. | Pendiente | Sprint 3 | [#57](https://github.com/44ndy/clancys-rewards/issues/57) |
 | RF-14 | Tiempo mínimo entre visitas | Personal | Media | Un segundo escaneo del mismo cliente dentro del intervalo configurado se rechaza. | Pendiente | Sprint 3 | [#56](https://github.com/44ndy/clancys-rewards/issues/56) |
 | RF-15 | Exportar y borrar la cuenta | Cliente | Alta | El cliente obtiene un archivo con sus datos y, al borrar la cuenta, sus datos personales se eliminan. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
+| RF-16 | Inicio de sesión con Apple | Cliente | Alta | En la app de iOS aparece el botón "Iniciar sesión con Apple"; el servidor valida el token de Apple y crea o recupera la cuenta. | Pendiente | Sprint 2 | — |
 
 ## Requisitos no funcionales
 
@@ -46,6 +47,7 @@ La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.x
 | RNF-06 | Botones táctiles accesibles | Administrador | Media | Todos los botones del panel cumplen el tamaño mínimo. | Pendiente | Sprint 1 | [#45](https://github.com/44ndy/clancys-rewards/issues/45) |
 | RNF-07 | Servidor en la nube con HTTPS | Sistema | Alta | La app de producción se conecta por HTTPS y la base tiene respaldo automático. | Pendiente | Sprint 2 | [#47](https://github.com/44ndy/clancys-rewards/issues/47) |
 | RNF-08 | Cumplimiento del RGPD | Cliente | Alta | El registro exige aceptar la política; el cliente puede exportar y borrar sus datos. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
-| RNF-09 | App Android en Google Play | Sistema | Alta | La app pasa la prueba cerrada de 14 días con al menos 12 testers y queda publicada. | Pendiente | Sprint 2 y cierre | [#51](https://github.com/44ndy/clancys-rewards/issues/51) |
+| RNF-09 | App en Android e iOS | Sistema | Alta | Android: pasa la prueba cerrada de 14 días con al menos 12 testers. iOS: el build de EAS pasa TestFlight y la revisión de Apple. Ambas quedan publicadas. | Pendiente | Sprint 2 y cierre | [#51](https://github.com/44ndy/clancys-rewards/issues/51) |
 | RNF-10 | Contenido como datos | Administrador | Media | Agregar un plato o un premio no requiere publicar una nueva versión de la app. | Implementado | Prototipo | — |
 | RNF-11 | Pruebas automatizadas | Sistema | Alta | La suite de pruebas corre sin errores antes de cada entrega. | Pendiente | Sprint 3 | [#58](https://github.com/44ndy/clancys-rewards/issues/58) |
+| RNF-12 | Requisitos de publicación en App Store | Sistema | Alta | La ficha de App Store está completa y la app no es rechazada en la revisión por estos puntos. | Pendiente | Sprint 3 | — |

@@ -1,6 +1,6 @@
 # Clancy's Rewards
 
-Aplicación móvil de fidelización de clientes para Clancy's Cork, un pub y restaurante en el centro de Cork, Irlanda. El cliente acumula visitas mostrando un código QR que el personal escanea, y canjea premios al llegar a la meta. La administración gestiona el menú, los premios y las promociones desde la misma app, y revisa indicadores de sus clientes.
+Aplicación móvil de fidelización de clientes para Clancy's Cork, un pub y restaurante en el centro de Cork, Irlanda. Se publicará en Google Play y en App Store. El cliente acumula visitas mostrando un código QR que el personal escanea, y canjea premios al llegar a la meta. La administración gestiona el menú, los premios y las promociones desde la misma app, y revisa indicadores de sus clientes.
 
 Proyecto Capstone (PTY4614, sección 001V), Ingeniería en Informática, Duoc UC San Bernardo.
 
@@ -16,10 +16,11 @@ La administración del local participa como referente del negocio para validar r
 
 | Capa | Tecnología |
 |---|---|
-| App móvil | React Native con Expo (TypeScript) y expo-router |
+| App móvil | React Native con Expo (TypeScript) y expo-router, para Android e iOS |
 | API | Python con FastAPI |
 | Base de datos | MongoDB (driver Motor) |
 | Autenticación | Correo y contraseña (bcrypt + JWT) e inicio de sesión con Google |
+| Compilación y publicación | EAS Build y EAS Submit (Expo): builds en la nube para Android e iOS, sin Mac |
 | Gestión | GitHub: issues, milestones y etiquetas |
 
 ## Arquitectura
@@ -41,7 +42,7 @@ Se usa Scrum en sprints de dos semanas, porque permite entregar avances funciona
 |---|---|---|---|
 | Sprint 0 | 19 – 23 oct | Configuración | Completado |
 | Sprint 1 | 26 oct – 6 nov | Seguro y confiable | En curso |
-| Sprint 2 | 9 – 20 nov | En la nube | No iniciado |
+| Sprint 2 | 9 – 20 nov | En la nube, Android e iOS | No iniciado |
 | Sprint 3 | 23 nov – 4 dic | Privacidad y control | No iniciado |
 | Cierre | 7 – 11 dic | Producción y entrega | No iniciado |
 
@@ -97,7 +98,7 @@ clancys-rewards/
 | 1 | Definición del Proyecto APT, presentación y Carta Gantt | `Fase 1/Evidencias Grupales/` |
 | 2 | Informe de avance (guía 2.4) | `Fase 2/Evidencias Grupales/` |
 | 2 | Diario de reflexión y autoevaluación de avance | `Fase 2/Evidencias Individuales/` |
-| 2 | Matriz de requisitos (Excel), arquitectura y metodología | `Fase 2/Evidencias de documentación/` |
+| 2 | Matriz de requisitos (Excel), arquitectura, metodología y plan de publicación en iOS | `Fase 2/Evidencias de documentación/` |
 | 2 | Capturas de la app y modelo de datos | `Fase 2/Evidencias de sistema/` |
 | 2 | Presentación del avance | `Fase 2/Evidencias Proyecto/` |
 
