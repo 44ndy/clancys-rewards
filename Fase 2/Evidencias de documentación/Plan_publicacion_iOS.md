@@ -34,14 +34,14 @@ flowchart LR
 
 ## Tareas agregadas al backlog
 
-| Sprint | Tarea | Por qué va ahí |
-|---|---|---|
-| Sprint 2 | Inscripción en Apple Developer Program | La verificación de la cuenta puede tardar; debe estar lista antes del primer build |
-| Sprint 2 | HU-20: inicio de sesión con Apple | Junto con el login con Google (HU-02), que ya estaba en este sprint |
-| Sprint 2 | Build de iOS con EAS y prueba interna en TestFlight | Al mismo tiempo que el build de Android, para probar las dos versiones desde el inicio |
-| Sprint 3 | Ficha de App Store: capturas, privacidad y permisos | Se hace junto con la política de privacidad del RGPD |
-| Sprint 3 | Prueba en TestFlight con iPhones del personal y conocidos | En paralelo a la prueba cerrada de Google Play |
-| Cierre | Envío a revisión de Apple y publicación en App Store | Junto con el paso a producción en Google Play |
+| Sprint | Tarea | Issue | Por qué va ahí |
+|---|---|---|---|
+| Sprint 2 | Inscripción en Apple Developer Program | [#65](https://github.com/44ndy/clancys-rewards/issues/65) | La verificación de la cuenta puede tardar; debe estar lista antes del primer build |
+| Sprint 2 | HU-20: inicio de sesión con Apple | [#66](https://github.com/44ndy/clancys-rewards/issues/66) | Junto con el login con Google (HU-02), que ya estaba en este sprint |
+| Sprint 2 | Build de iOS con EAS y prueba interna en TestFlight | [#67](https://github.com/44ndy/clancys-rewards/issues/67) | Al mismo tiempo que el build de Android, para probar las dos versiones desde el inicio |
+| Sprint 3 | Ficha de App Store: capturas, privacidad y permisos | [#68](https://github.com/44ndy/clancys-rewards/issues/68) | Se hace junto con la política de privacidad del RGPD |
+| Sprint 3 | Prueba en TestFlight con iPhones del personal y conocidos | [#69](https://github.com/44ndy/clancys-rewards/issues/69) | En paralelo a la prueba cerrada de Google Play |
+| Cierre | Envío a revisión de Apple y publicación en App Store | [#70](https://github.com/44ndy/clancys-rewards/issues/70) | Junto con el paso a producción en Google Play |
 
 Para no pasar los 13 puntos del Sprint 2, la tarea "Imágenes en almacenamiento de objetos" (#49) pasa al Sprint 3, porque no impide publicar.
 

@@ -33,7 +33,7 @@ La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.x
 | RF-13 | Recuperación de contraseña | Cliente | Media | Al solicitarlo, llega un enlace al correo que permite definir una nueva contraseña. | Pendiente | Sprint 3 | [#57](https://github.com/44ndy/clancys-rewards/issues/57) |
 | RF-14 | Tiempo mínimo entre visitas | Personal | Media | Un segundo escaneo del mismo cliente dentro del intervalo configurado se rechaza. | Pendiente | Sprint 3 | [#56](https://github.com/44ndy/clancys-rewards/issues/56) |
 | RF-15 | Exportar y borrar la cuenta | Cliente | Alta | El cliente obtiene un archivo con sus datos y, al borrar la cuenta, sus datos personales se eliminan. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
-| RF-16 | Inicio de sesión con Apple | Cliente | Alta | En la app de iOS aparece el botón "Iniciar sesión con Apple"; el servidor valida el token de Apple y crea o recupera la cuenta. | Pendiente | Sprint 2 | — |
+| RF-16 | Inicio de sesión con Apple | Cliente | Alta | En la app de iOS aparece el botón "Iniciar sesión con Apple"; el servidor valida el token de Apple y crea o recupera la cuenta. | Pendiente | Sprint 2 | [#66](https://github.com/44ndy/clancys-rewards/issues/66) |
 
 ## Requisitos no funcionales
 
@@ -50,4 +50,4 @@ La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.x
 | RNF-09 | App en Android e iOS | Sistema | Alta | Android: pasa la prueba cerrada de 14 días con al menos 12 testers. iOS: el build de EAS pasa TestFlight y la revisión de Apple. Ambas quedan publicadas. | Pendiente | Sprint 2 y cierre | [#51](https://github.com/44ndy/clancys-rewards/issues/51) |
 | RNF-10 | Contenido como datos | Administrador | Media | Agregar un plato o un premio no requiere publicar una nueva versión de la app. | Implementado | Prototipo | — |
 | RNF-11 | Pruebas automatizadas | Sistema | Alta | La suite de pruebas corre sin errores antes de cada entrega. | Pendiente | Sprint 3 | [#58](https://github.com/44ndy/clancys-rewards/issues/58) |
-| RNF-12 | Requisitos de publicación en App Store | Sistema | Alta | La ficha de App Store está completa y la app no es rechazada en la revisión por estos puntos. | Pendiente | Sprint 3 | — |
+| RNF-12 | Requisitos de publicación en App Store | Sistema | Alta | La ficha de App Store está completa y la app no es rechazada en la revisión por estos puntos. | Pendiente | Sprint 3 | [#68](https://github.com/44ndy/clancys-rewards/issues/68) |
