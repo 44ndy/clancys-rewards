@@ -1,6 +1,6 @@
 # Aplicación funcionando
 
-Capturas del prototipo en un teléfono Android. Muestran el flujo completo de una visita y de un canje.
+Capturas del prototipo funcionando, tomadas el 29 de octubre de 2026 en la versión web de la app con tamaño de teléfono. Muestran el flujo completo de una visita y de un canje. En la versión web el escáner pide pegar el código que aparece bajo el QR; en el teléfono, el mesero lo lee con la cámara.
 
 | # | Pantalla | Rol |
 |---|---|---|
@@ -17,8 +17,8 @@ Capturas del prototipo en un teléfono Android. Muestran el flujo completo de un
 
 <p>
 <img src="capturas/03_Pase_QR_del_cliente.jpg" width="180">
-<img src="capturas/04_Escaner_del_mesero.jpg" width="180">
 <img src="capturas/05_Resultado_de_visita.jpg" width="180">
+<img src="capturas/08_Canje_-_entregar_al_cliente.jpg" width="180">
 <img src="capturas/10_Panel_del_dueno.jpg" width="180">
 </p>
 
