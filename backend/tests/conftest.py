@@ -21,8 +21,7 @@ from pymongo import MongoClient
 BACKEND = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND))
 
-# Suite de la plantilla original: apunta a una URL que ya no existe y prueba
-# Stripe y reservas, que se eliminaron. No se versiona y no se recoge.
+# Suite antigua del prototipo, ya obsoleta. No se versiona y no se recoge.
 collect_ignore = ["clancys_backend_test.py"]
 
 BASE_PRUEBA = f"clancys_test_{uuid.uuid4().hex[:8]}"

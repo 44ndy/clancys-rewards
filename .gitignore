@@ -39,7 +39,7 @@ uploads/
 # Copias de respaldo y archivos sueltos
 *.bak
 *.bak-*
-README.plantilla.local.md
+README.local-antiguo.md
 
 # Archivos de trabajo (no son parte de la app)
 .impeccable/
@@ -60,13 +60,12 @@ DETENER-backend.cmd
 backend/run-server.cmd
 backend/demo_seed.py
 
-# Restos de la plantilla que la app no usa
+# Imágenes antiguas que la app ya no usa
 frontend/assets/images/_backup-template/
 
 # Stub vacío de la raíz. Con barra adelante para que no alcance a
 # backend/tests/, donde sí viven pruebas que se versionan.
 /tests/
 
-# Suite obsoleta de la plantilla: apunta a una URL que ya no existe y prueba
-# Stripe y reservas, que se eliminaron. Las pruebas nuevas si se versionan.
+# Suite antigua del prototipo, ya obsoleta. Las pruebas nuevas sí se versionan.
 backend/tests/clancys_backend_test.py

@@ -4,9 +4,9 @@
 // job here is to reproduce it faithfully and never redraw, restyle or letter
 // it ourselves. Two consequences that are easy to get wrong:
 //
-//   · The roundel already contains the wordmark, "EST. 1824" and "CORK". Any
-//     screen that sets those again in Playfair puts a second, competing
-//     version of the brand on the page. Use the mark, then stop.
+//   · The roundel already carries its own lettering. Any screen that sets the
+//     same words again in Playfair puts a second, competing version of the
+//     brand on the page. Use the mark, then stop.
 //   · It is line art, so it is shipped as an alpha matte in a single ink and
 //     is never recoloured at runtime. "gold" is for the dark walnut grounds,
 //     "ivory" for the emerald card. Tinting a PNG per-platform drifts.

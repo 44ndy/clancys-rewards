@@ -119,7 +119,7 @@ def _rate_frenar(clave: str, maximo: int, ventana_s: int) -> None:
     """Corta con 429 si la clave se pasó del límite."""
     espera = _rate_espera(clave, maximo, ventana_s)
     if espera is not None:
-        raise HTTPException(429, "Demasiados intentos. Probá de nuevo en un rato.",
+        raise HTTPException(429, "Too many attempts. Please try again later.",
                             headers={"Retry-After": str(espera)})
 
 
