@@ -44,7 +44,7 @@ export default function Welcome() {
           style={styles.crest}
         >
           <View style={styles.crestRule} />
-          <Text style={styles.crestEst}>EST. 1824</Text>
+          <Text style={styles.crestEst}>TRADITIONAL IRISH FARE</Text>
           <View style={styles.crestRule} />
         </Animated.View>
 
@@ -58,7 +58,7 @@ export default function Welcome() {
           </Animated.Text>
 
           <Animated.Text entering={enter(340)} style={styles.tagline}>
-            A taste of Ireland, since 1824.{"\n"}
+            A taste of Ireland.{"\n"}
             Carry the warmth of the snug in your pocket.
           </Animated.Text>
 

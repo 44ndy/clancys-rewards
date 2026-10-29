@@ -219,7 +219,7 @@ export default function Scan() {
 
             <View style={styles.trayFooter}>
               <View style={styles.trayRule} />
-              <Text style={styles.trayMark}>CLANCY&apos;S · EST. 1824</Text>
+              <Text style={styles.trayMark}>CLANCY&apos;S · CORK</Text>
               <View style={styles.trayRule} />
             </View>
           </View>
