@@ -32,6 +32,14 @@ PUSH_BASE_URL = os.environ["PUSH_BASE_URL"]
 GOOGLE_CLIENT_IDS = [c.strip() for c in os.environ.get("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()]
 _google_auth_request = google_auth_requests.Request()
 
+# Browser origins allowed to call this API, comma-separated in the environment.
+# A wildcard is not an option here: the app sends credentials, and a browser
+# refuses "*" on a credentialed request, so "*" was never really working. Only
+# the web build is affected — a native app sends no Origin header at all.
+# Left empty, it falls back to the local dev servers so a fresh clone runs.
+CORS_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+CORS_FALLBACK = ["http://localhost:8081", "http://localhost:19006", "http://127.0.0.1:8081"]
+
 # Passwords for the three staff accounts created on a first run. They live in the
 # environment, never in this file: a password committed to a repository is a
 # password everyone with the repository has. Only read when the seed actually
@@ -821,5 +829,9 @@ async def shutdown():
 
 app.mount("/api/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 app.include_router(api)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
+_origenes = CORS_ORIGINS or CORS_FALLBACK
+if not CORS_ORIGINS:
+    logger.warning("CORS_ORIGINS vacío: permitiendo solo desarrollo local (%s). "
+                   "En producción hay que listar el dominio real.", ", ".join(_origenes))
+app.add_middleware(CORSMiddleware, allow_origins=_origenes, allow_credentials=True,
                    allow_methods=["*"], allow_headers=["*"])
