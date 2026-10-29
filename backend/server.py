@@ -728,7 +728,7 @@ async def seed_clancys():
     await db.restaurant.insert_one({
         "_id": RESTAURANT_ID,
         "name": "Clancy's",
-        "tagline": "A taste of Ireland, since 1824",
+        "tagline": "A taste of Ireland",
         "description": "Heritage Irish dining in the heart of Cork. Family-run kitchen, hand-cut produce, and a snug atmosphere of warm oak and brass.",
         "logo_url": "https://images.unsplash.com/photo-1497644083578-611b798c60f3?w=300&q=80",
         "cover_url": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80",
