@@ -58,7 +58,9 @@ sequenceDiagram
 - Permisos por rol en el servidor: solo el personal escanea, solo la administración edita y solo el dueño gestiona al personal.
 - QR de un solo uso con vencimiento de 3 minutos, para que una foto del código no sirva después.
 - Credenciales fuera del código, en variables de entorno (`backend/.env.example`).
-- Pendiente para el Sprint 1: CORS restringido y límite de intentos.
+- CORS restringido: la API solo acepta los orígenes de la variable `CORS_ORIGINS` (Sprint 1, issue #41).
+- Límite de intentos: 5 logins fallidos cada 15 minutos por IP y correo, y 20 escaneos por minuto por empleado. Al pasarse, la API responde 429 con la cabecera `Retry-After` (Sprint 1, issue #42).
+- 10 pruebas automatizadas con pytest comprueban el límite de intentos (`backend/tests`).
 
 ## Despliegue planificado (Sprint 2)
 

@@ -55,9 +55,19 @@ Requisitos: Python 3.11 o superior, Node.js 20 o superior, MongoDB y la app Expo
 ```bash
 cd backend
 pip install -r requirements.txt
-cp .env.example .env        # completar los valores (MongoDB, JWT y cuentas iniciales)
+cp .env.example .env        # completar los valores (MongoDB, JWT, cuentas iniciales y CORS_ORIGINS)
 uvicorn server:app --host 0.0.0.0 --port 8001
 ```
+
+**Pruebas del backend**
+
+```bash
+cd backend
+pip install -r requirements-dev.txt
+pytest
+```
+
+Las pruebas crean una base de datos temporal en MongoDB, así que no tocan los datos reales.
 
 **App**
 

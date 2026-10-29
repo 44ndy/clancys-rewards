@@ -1,10 +1,10 @@
 # Requisitos del sistema
 
-Proyecto: Clancy's Rewards · Capstone, Fase 2 · Estado al 28 de octubre de 2026.
+Proyecto: Clancy's Rewards · Capstone, Fase 2 · Estado al 29 de octubre de 2026.
 
 La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.xlsx)**: 28 requisitos con descripción, actor, prioridad, criterio de aceptación, origen, estado, sprint, issue y evidencia en el sistema; un resumen por estado; y la hoja de requisitos técnicos con las herramientas, tecnologías, servicios y costos. Esta página resume la misma información.
 
-**Estado:** 14 implementados, 1 parcial y 13 pendientes; cada pendiente tiene su sprint e issue.
+**Estado:** 15 implementados, 2 parciales y 11 pendientes; cada pendiente tiene su sprint e issue.
 
 ## Actores
 
@@ -43,11 +43,11 @@ La matriz completa está en **[Matriz_de_Requisitos.xlsx](Matriz_de_Requisitos.x
 | RNF-02 | Sesiones con token JWT | Sistema | Alta | Una petición sin token o con un token vencido se responde con error 401. | Implementado | Prototipo | — |
 | RNF-03 | Permisos por rol en el servidor | Sistema | Alta | Un cliente que llama a una ruta de administración recibe error 403. | Implementado | Prototipo | — |
 | RNF-04 | Credenciales fuera del código | Sistema | Alta | El repositorio no contiene ninguna credencial; existe un .env.example sin valores. | Implementado | Sprint 0 | [#36](https://github.com/44ndy/clancys-rewards/issues/36) |
-| RNF-05 | Límite de intentos y CORS restringido | Sistema | Alta | Tras varios intentos fallidos la API responde error 429; un origen no autorizado es rechazado. | Pendiente | Sprint 1 | [#42](https://github.com/44ndy/clancys-rewards/issues/42) |
+| RNF-05 | Límite de intentos y CORS restringido | Sistema | Alta | Tras 5 intentos fallidos de login en 15 minutos, o más de 20 escaneos por minuto, la API responde error 429; un origen que no está en CORS_ORIGINS es rechazado. | Implementado | Sprint 1 | [#42](https://github.com/44ndy/clancys-rewards/issues/42) |
 | RNF-06 | Botones táctiles accesibles | Administrador | Media | Todos los botones del panel cumplen el tamaño mínimo. | Pendiente | Sprint 1 | [#45](https://github.com/44ndy/clancys-rewards/issues/45) |
 | RNF-07 | Servidor en la nube con HTTPS | Sistema | Alta | La app de producción se conecta por HTTPS y la base tiene respaldo automático. | Pendiente | Sprint 2 | [#47](https://github.com/44ndy/clancys-rewards/issues/47) |
 | RNF-08 | Cumplimiento del RGPD | Cliente | Alta | El registro exige aceptar la política; el cliente puede exportar y borrar sus datos. | Pendiente | Sprint 3 | [#54](https://github.com/44ndy/clancys-rewards/issues/54) |
 | RNF-09 | App en Android e iOS | Sistema | Alta | Android: pasa la prueba cerrada de 14 días con al menos 12 testers. iOS: el build de EAS pasa TestFlight y la revisión de Apple. Ambas quedan publicadas. | Pendiente | Sprint 2 y cierre | [#51](https://github.com/44ndy/clancys-rewards/issues/51) |
 | RNF-10 | Contenido como datos | Administrador | Media | Agregar un plato o un premio no requiere publicar una nueva versión de la app. | Implementado | Prototipo | — |
-| RNF-11 | Pruebas automatizadas | Sistema | Alta | La suite de pruebas corre sin errores antes de cada entrega. | Pendiente | Sprint 3 | [#58](https://github.com/44ndy/clancys-rewards/issues/58) |
+| RNF-11 | Pruebas automatizadas | Sistema | Alta | La suite de pruebas corre sin errores antes de cada entrega. | Parcial | Sprint 3 | [#58](https://github.com/44ndy/clancys-rewards/issues/58) |
 | RNF-12 | Requisitos de publicación en App Store | Sistema | Alta | La ficha de App Store está completa y la app no es rechazada en la revisión por estos puntos. | Pendiente | Sprint 3 | [#68](https://github.com/44ndy/clancys-rewards/issues/68) |
