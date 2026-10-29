@@ -2,7 +2,7 @@
 Clancy's Restaurant — single-tenant loyalty + full Owner Admin backend.
 FastAPI + MongoDB + Google Sign-In + notificaciones push.
 """
-from fastapi import FastAPI, APIRouter, HTTPException, Header, BackgroundTasks, Depends, Query, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, Header, BackgroundTasks, Depends, Query, UploadFile, File, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
@@ -13,7 +13,7 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_auth_requests
-import os, logging, uuid, secrets, bcrypt, jwt, httpx, asyncio, json
+import os, logging, uuid, secrets, time, bcrypt, jwt, httpx, asyncio, json
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -78,6 +78,56 @@ push_client = httpx.AsyncClient(
     headers={"X-Push-Key": PUSH_KEY},
     timeout=10.0,
 )
+
+# ---------- Rate limiting ----------
+# Ventana deslizante en memoria. Alcanza porque el backend corre como un solo
+# proceso; con varias instancias detrás de un balanceador cada una llevaría su
+# propia cuenta y habría que mover esto a Redis.
+#
+# El login se limita por intentos FALLIDOS: a quien escribe bien la contraseña
+# no se le cuenta nada, así que un cliente legítimo nunca choca con el límite.
+# El escaneo se limita por llamadas, porque ahí lo que se frena es probar
+# tokens al voleo.
+LOGIN_MAX_INTENTOS, LOGIN_VENTANA_S = 5, 900      # 5 fallos cada 15 minutos
+SCAN_MAX_LLAMADAS, SCAN_VENTANA_S = 20, 60        # 20 escaneos por minuto
+
+_intentos: dict[str, list[float]] = {}
+
+
+def _rate_espera(clave: str, maximo: int, ventana_s: int) -> Optional[int]:
+    """Segundos que faltan para reintentar, o None si todavía puede pasar."""
+    ahora = time.monotonic()
+    marcas = [t for t in _intentos.get(clave, []) if ahora - t < ventana_s]
+    _intentos[clave] = marcas
+    if len(marcas) < maximo:
+        return None
+    return int(ventana_s - (ahora - marcas[0])) + 1
+
+
+def _rate_anotar(clave: str, ventana_s: int) -> None:
+    ahora = time.monotonic()
+    marcas = [t for t in _intentos.get(clave, []) if ahora - t < ventana_s]
+    marcas.append(ahora)
+    _intentos[clave] = marcas
+
+
+def _rate_limpiar(clave: str) -> None:
+    _intentos.pop(clave, None)
+
+
+def _rate_frenar(clave: str, maximo: int, ventana_s: int) -> None:
+    """Corta con 429 si la clave se pasó del límite."""
+    espera = _rate_espera(clave, maximo, ventana_s)
+    if espera is not None:
+        raise HTTPException(429, "Demasiados intentos. Probá de nuevo en un rato.",
+                            headers={"Retry-After": str(espera)})
+
+
+def _ip_de(request: Optional[Request]) -> str:
+    if request is None:
+        return "desconocida"
+    return (request.client.host if request.client else None) or "desconocida"
+
 
 # ---------- Helpers ----------
 def now_utc() -> datetime: return datetime.now(timezone.utc)
@@ -241,12 +291,19 @@ async def auth_register(body: RegisterIn):
     return {"token": create_jwt(uid), "user": _user_payload(doc)}
 
 @api.post("/auth/login")
-async def auth_login(body: LoginIn):
+async def auth_login(body: LoginIn, request: Request = None):
+    # Por IP y correo a la vez: así un atacante no bloquea la cuenta de otro
+    # desde afuera, y tampoco le sirve ir probando correo por correo.
+    clave = f"login:{_ip_de(request)}:{body.email.lower()}"
+    _rate_frenar(clave, LOGIN_MAX_INTENTOS, LOGIN_VENTANA_S)
+
     u = await db.users.find_one({"email": body.email.lower()}, {"_id": 0})
     if not u or not u.get("password_hash") or not verify_password(body.password, u["password_hash"]):
+        _rate_anotar(clave, LOGIN_VENTANA_S)
         raise HTTPException(401, "Invalid credentials")
     if not u.get("active", True):
         raise HTTPException(403, "Account disabled")
+    _rate_limpiar(clave)
     return {"token": create_jwt(u["user_id"]), "user": _user_payload(u)}
 
 @api.post("/auth/google")
@@ -345,9 +402,14 @@ async def gen_qr(body: GenerateQRIn, user: dict = Depends(get_current_user)):
     return {"token": token, "expires_at": doc["expires_at"].isoformat(), "purpose": body.purpose}
 
 @api.post("/qr/scan")
-async def scan_qr(body: ScanQRIn, user: dict = Depends(get_current_user), background: BackgroundTasks = None):
+async def scan_qr(body: ScanQRIn, user: dict = Depends(get_current_user),
+                  background: BackgroundTasks = None, request: Request = None):
     if user.get("role") not in STAFF_QR_ROLES:
         raise HTTPException(403, "Staff only")
+    # Por empleado, no por IP: en el local todos salen por la misma conexión.
+    clave = f"scan:{user['user_id']}"
+    _rate_frenar(clave, SCAN_MAX_LLAMADAS, SCAN_VENTANA_S)
+    _rate_anotar(clave, SCAN_VENTANA_S)
     qr = await db.qr_tokens.find_one({"token": body.token}, {"_id": 0})
     if not qr: raise HTTPException(400, "Invalid QR token")
     if qr.get("used"): raise HTTPException(400, "QR already used")

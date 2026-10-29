@@ -63,9 +63,10 @@ backend/demo_seed.py
 # Restos de la plantilla que la app no usa
 frontend/assets/images/_backup-template/
 
-# Stub vacío
-tests/
+# Stub vacío de la raíz. Con barra adelante para que no alcance a
+# backend/tests/, donde sí viven pruebas que se versionan.
+/tests/
 
-# Suite de pruebas obsoleta: apunta a la URL de la plantilla y prueba Stripe y
-# reservas, que ya no existen. Hay que reescribirla antes de subirla.
-backend/tests/
+# Suite obsoleta de la plantilla: apunta a una URL que ya no existe y prueba
+# Stripe y reservas, que se eliminaron. Las pruebas nuevas si se versionan.
+backend/tests/clancys_backend_test.py
