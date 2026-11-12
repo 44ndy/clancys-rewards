@@ -64,6 +64,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "owner": "andyyys_team",
+    "extra": {
+      "eas": {
+        "projectId": "1af48d18-18b3-4098-8057-e6ddc3f4c7e0"
+      }
     }
   }
 }
