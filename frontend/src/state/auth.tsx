@@ -60,7 +60,9 @@ function randomToken(): string {
  * React renders anything — makes the handoff immune to that race.
  */
 const pendingGoogleRedirect = (() => {
-  if (typeof window === "undefined" || !window.location.hash.includes("id_token=")) return null;
+  // Solo en web: en Android/iOS `window` existe pero `window.location` no, y leer
+  // `.hash` ahí rompía la app al abrirla.
+  if (Platform.OS !== "web" || typeof window === "undefined" || !window.location?.hash?.includes("id_token=")) return null;
   const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const captured = {
     idToken: params.get("id_token"),
