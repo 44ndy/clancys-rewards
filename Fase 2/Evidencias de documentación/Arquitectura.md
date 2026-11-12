@@ -66,10 +66,12 @@ sequenceDiagram
 
 | Componente | Hoy | Sprint 2 |
 |---|---|---|
-| API | Local, en el computador de desarrollo | Render o Railway, con HTTPS, región europea |
-| Base de datos | MongoDB local | MongoDB Atlas en la Unión Europea, con respaldo diario |
-| Imágenes | Carpeta local del servidor | Almacenamiento de objetos |
+| API | Local, en el computador de desarrollo | Render, con HTTPS, región de Fráncfort |
+| Base de datos | MongoDB local | MongoDB Atlas en la Unión Europea, con respaldos al pasar a producción |
+| Imágenes | Carpeta local del servidor | Cloudflare R2, jurisdicción UE |
 | App Android | Expo en modo desarrollo | Build de producción con EAS y prueba cerrada en Google Play |
 | App iOS | No existe aún | Build de iOS con EAS en la nube (sin Mac), TestFlight y App Store |
 
 Los datos se alojan en la Unión Europea porque la app trata datos personales de clientes en Irlanda y debe cumplir el RGPD.
+
+Se eligió Render con MongoDB Atlas porque es la combinación que mejor escala para el modelo de negocio: cada pieza crece por separado y el costo aumenta solo cuando hay más clientes. La comparación con las otras alternativas, los precios y los costos por etapa están en [Plataforma de despliegue](Plataforma_de_despliegue.md).

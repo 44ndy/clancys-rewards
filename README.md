@@ -25,7 +25,7 @@ La administración del local participa como referente del negocio para validar r
 
 ## Arquitectura
 
-Arquitectura cliente-servidor en tres capas. El detalle está en [Arquitectura](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Arquitectura.md) y el modelo de datos en [Modelo de datos](Fase%202/Evidencias%20de%20sistema/Base%20de%20datos/Modelo_de_datos.md).
+Arquitectura cliente-servidor en tres capas. El detalle está en [Arquitectura](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Arquitectura.md) y el modelo de datos en [Modelo de datos](Fase%202/Evidencias%20de%20sistema/Base%20de%20datos/Modelo_de_datos.md). Para el despliegue se eligió Render (API), MongoDB Atlas (base de datos) y Cloudflare R2 (imágenes), todo en la Unión Europea, por ser la opción que mejor escala para el modelo de negocio; la comparación y los costos están en [Plataforma de despliegue](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Plataforma_de_despliegue.md).
 
 ```mermaid
 flowchart LR
@@ -97,7 +97,7 @@ clancys-rewards/
 │   └── Evidencias de sistema/
 │       ├── Aplicación/                Capturas de la app funcionando
 │       └── Base de datos/             Modelo de datos
-└── Fase 3/                            Presentación final (se completa al cierre)
+└── Fase 3/                            Presentación final, diario y autoevaluación
 ```
 
 ## Evidencias por fase
@@ -108,8 +108,11 @@ clancys-rewards/
 | 1 | Definición del Proyecto APT, presentación y Carta Gantt | `Fase 1/Evidencias Grupales/` |
 | 2 | Informe de avance (guía 2.4) | `Fase 2/Evidencias Grupales/` |
 | 2 | Diario de reflexión y autoevaluación de avance | `Fase 2/Evidencias Individuales/` |
-| 2 | Matriz de requisitos (Excel), arquitectura, metodología y plan de publicación en iOS | `Fase 2/Evidencias de documentación/` |
+| 2 | Matriz de requisitos (Excel), arquitectura, plataforma de despliegue, metodología y plan de publicación en iOS | `Fase 2/Evidencias de documentación/` |
 | 2 | Capturas de la app y modelo de datos | `Fase 2/Evidencias de sistema/` |
 | 2 | Presentación del avance | `Fase 2/Evidencias Proyecto/` |
+| 3 | Presentación final y guion | `Fase 3/Evidencias Proyecto/` |
+| 3 | Diario de reflexión y autoevaluación | `Fase 3/Evidencias Individuales/` |
+| 3 | Rúbrica y planilla de evaluación | `Fase 3/Evidencias Grupales/` |
 
 La Carta Gantt se abre en [onlinegantt.com](https://www.onlinegantt.com) con la opción "Open .gantt file".
