@@ -37,6 +37,7 @@ const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || "";
 const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || GOOGLE_WEB_CLIENT_ID;
 const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || GOOGLE_WEB_CLIENT_ID;
 
+const GOOGLE_PLACEHOLDER_ID = "not-configured.apps.googleusercontent.com";
 const GOOGLE_NONCE_KEY = "clancys_google_nonce";
 const GOOGLE_STATE_KEY = "clancys_google_state";
 
@@ -77,10 +78,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registeredPushFor = useRef<string | null>(null);
   const [googleError, setGoogleError] = useState<string | null>(null);
 
+  // expo-auth-session lanza un error al renderizar si el client ID de la
+  // plataforma viene vacío, y en una build nativa eso cierra la app al abrirla.
+  // Sin Google configurado se pasa un valor de relleno: el botón queda oculto
+  // (googleReady es false) y el flujo nunca se inicia.
   const [, , promptGoogleAsync] = Google.useIdTokenAuthRequest({
-    webClientId: GOOGLE_WEB_CLIENT_ID,
-    iosClientId: GOOGLE_IOS_CLIENT_ID,
-    androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+    webClientId: GOOGLE_WEB_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
+    iosClientId: GOOGLE_IOS_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
   });
 
   // restore session on mount
