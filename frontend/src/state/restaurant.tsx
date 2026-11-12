@@ -26,12 +26,18 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
   const [loyalty, setLoyalty] = useState<Loyalty | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Depende del id y el rol, no del objeto `user`: auth.refresh() trae un objeto
+  // nuevo aunque sea la misma persona, y eso cambiaba `load`, que la pantalla de
+  // Perfil vuelve a llamar al enfocarse (bucle infinito de peticiones).
+  const userId = user?.user_id;
+  const role = user?.role;
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
       const r = await api.restaurant();
       setRestaurant(r);
-      if (user && user.role === "customer") {
+      if (userId && role === "customer") {
         try {
           const l = await api.loyalty();
           setLoyalty(l);
@@ -44,7 +50,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [userId, role]);
 
   useEffect(() => {
     load();

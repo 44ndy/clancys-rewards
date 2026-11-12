@@ -144,7 +144,10 @@ async function request<T = any>(
   path: string,
   opts: { method?: string; body?: any; auth?: boolean } = {}
 ): Promise<T> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  // Una foto viaja como FormData: va tal cual y sin Content-Type, para que fetch
+  // ponga el multipart con su boundary. Pasarla por JSON.stringify la dejaba en "{}".
+  const isForm = typeof FormData !== "undefined" && opts.body instanceof FormData;
+  const headers: Record<string, string> = isForm ? {} : { "Content-Type": "application/json" };
   if (opts.auth !== false) {
     const t = await tokenStore.get();
     if (t) headers["Authorization"] = `Bearer ${t}`;
@@ -152,7 +155,7 @@ async function request<T = any>(
   const r = await fetch(`${BASE}/api${path}`, {
     method: opts.method || "GET",
     headers,
-    body: opts.body ? JSON.stringify(opts.body) : undefined,
+    body: isForm ? opts.body : opts.body ? JSON.stringify(opts.body) : undefined,
   });
   if (!r.ok) {
     let d = `HTTP ${r.status}`;
