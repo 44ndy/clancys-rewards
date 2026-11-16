@@ -26,3 +26,6 @@ requests==2.34.2
 
 # Cliente HTTP (notificaciones push)
 httpx==0.28.1
+
+# Zona horaria de Irlanda para los gráficos (por si el servidor no trae la base de zonas)
+tzdata==2025.2

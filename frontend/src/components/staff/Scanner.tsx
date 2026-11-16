@@ -25,6 +25,7 @@ import { CameraView, useCameraPermissions, type BarcodeScanningResult } from "ex
 import Animated, { FadeIn, FadeOut, ReduceMotion } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 import { palette, radii, spacing, type } from "@/src/lib/theme";
 import { api, type ScanResult } from "@/src/lib/api";
@@ -68,6 +69,7 @@ const haptic = (kind: "success" | "error") => {
 };
 
 export function Scanner() {
+  const router = useRouter();
   const { user, signOut } = useAuth();
   const [permission, requestPermission] = useCameraPermissions();
   const [outcome, setOutcome] = useState<Outcome | null>(null);
@@ -165,6 +167,16 @@ export function Scanner() {
             On shift · {firstName}
           </Text>
           <Pressable
+            onPress={() => router.push("/settings")}
+            hitSlop={8}
+            style={styles.signOut}
+            accessibilityRole="button"
+            accessibilityLabel="Account settings"
+            testID="staff-settings"
+          >
+            <Ionicons name="settings-outline" size={21} color={palette.textOnDarkMuted} />
+          </Pressable>
+          <Pressable
             onPress={signOut}
             hitSlop={8}
             style={styles.signOut}
@@ -206,7 +218,7 @@ export function Scanner() {
               <Ionicons name="phone-portrait-outline" size={40} color={palette.gold} />
               <Text style={styles.askTitle}>Camera scanning runs on the phone</Text>
               <Text style={styles.askBody}>
-                This is the web build. Paste the code from under the guest's QR below.
+                This is the web build. Paste the code from under the guest&apos;s QR below.
               </Text>
             </View>
           )}

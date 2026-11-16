@@ -18,6 +18,7 @@ export default function AdminMore() {
     { icon: "restaurant-outline", label: "Menu", path: "/admin/menu", color: palette.walnutLight },
     { icon: "people-outline", label: "Customers", path: "/admin/customers", color: palette.success },
     { icon: "person-add-outline", label: "Staff", path: "/admin/staff", owner: true, color: palette.error },
+    { icon: "settings-outline", label: "Account settings", path: "/settings", color: palette.textSecondary },
   ];
 
   return (
@@ -28,7 +29,7 @@ export default function AdminMore() {
             key={it.label}
             style={[styles.row, shadow.soft]}
             onPress={() => router.push(it.path)}
-            testID={`more-${it.label.toLowerCase()}`}
+            testID={`more-${it.label.toLowerCase().replace(/ /g, "-")}`}
           >
             <View style={[styles.iconBox, { backgroundColor: it.color + "20" }]}>
               <Ionicons name={it.icon} size={22} color={it.color} />

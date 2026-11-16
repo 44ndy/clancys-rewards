@@ -1,17 +1,18 @@
 // Member profile — standing, membership, and the account controls.
 
 import { useCallback, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Linking, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, ReduceMotion } from "react-native-reanimated";
 
-import { elevation, gradients, palette, radii, spacing, type } from "@/src/lib/theme";
+import { gradients, palette, radii, spacing, type } from "@/src/lib/theme";
 import { useAuth } from "@/src/state/auth";
 import { useRestaurant } from "@/src/state/restaurant";
-import { api } from "@/src/lib/api";
+import { api, legalUrl } from "@/src/lib/api";
+import * as WebBrowser from "expo-web-browser";
 import { Grain } from "@/src/components/ui/Grain";
 import { PressableScale } from "@/src/components/ui/PressableScale";
 import { Surface } from "@/src/components/ui/Surface";
@@ -58,13 +59,24 @@ export default function Profile() {
                 {user.email}
               </Text>
             </View>
-            <View style={styles.avatar}>
-              {user.picture ? (
-                <Image source={{ uri: user.picture }} style={styles.avatarImg} />
-              ) : (
-                <Text style={styles.avatarText}>{user.name.charAt(0).toUpperCase()}</Text>
-              )}
-            </View>
+            <PressableScale
+              onPress={() => router.push("/settings")}
+              accessibilityRole="button"
+              accessibilityLabel="Account settings"
+              testID="profile-avatar"
+            >
+              <View style={styles.avatar}>
+                {user.picture ? (
+                  <Image source={{ uri: user.picture }} style={styles.avatarImg} />
+                ) : (
+                  <Text style={styles.avatarText}>{user.name.charAt(0).toUpperCase()}</Text>
+                )}
+              </View>
+              {/* The gear says "tap me to change your details". */}
+              <View style={styles.gear}>
+                <Ionicons name="settings-sharp" size={13} color={palette.surfaceDarker} />
+              </View>
+            </PressableScale>
           </View>
         </SafeAreaView>
       </View>
@@ -81,14 +93,35 @@ export default function Profile() {
         <Animated.View entering={enter(200)} style={styles.sectionWrap}>
           <Surface bezelPad={4} radius={radii.xl} depth="hairline">
             <Row
+              icon="settings-outline"
+              label="Account settings"
+              onPress={() => router.push("/settings")}
+              testID="profile-settings"
+            />
+            <Row
               icon="ribbon-outline"
               label="Rewards history"
               badge={redemptions.length ? String(redemptions.length) : undefined}
               onPress={() => router.push("/(tabs)/rewards")}
               testID="profile-history"
             />
-            <Row icon="notifications-outline" label="Notifications" disabled testID="profile-notifications" />
-            <Row icon="shield-checkmark-outline" label="Privacy & data" disabled last testID="profile-privacy" />
+            {Platform.OS !== "web" ? (
+              <Row
+                icon="notifications-outline"
+                label="Notifications"
+                onPress={() => Linking.openSettings()}
+                testID="profile-notifications"
+              />
+            ) : null}
+            <Row
+              icon="shield-checkmark-outline"
+              label="Privacy policy"
+              onPress={() =>
+                WebBrowser.openBrowserAsync(legalUrl("privacy")).catch(() => Linking.openURL(legalUrl("privacy")))
+              }
+              last
+              testID="profile-privacy"
+            />
           </Surface>
         </Animated.View>
 
@@ -187,6 +220,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   avatarImg: { width: 62, height: 62 },
+  gear: {
+    position: "absolute",
+    right: -2,
+    bottom: -2,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: palette.gold,
+    borderWidth: 2,
+    borderColor: palette.walnut,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   avatarText: { ...type.h2, color: palette.ivory },
 
   statsRow: { flexDirection: "row", gap: spacing.sm, paddingHorizontal: spacing.lg, marginTop: spacing.lg },

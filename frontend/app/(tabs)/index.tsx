@@ -137,10 +137,10 @@ export default function Home() {
               </Text>
             </View>
             <PressableScale
-              onPress={() => router.push("/(tabs)/profile")}
+              onPress={() => router.push("/settings")}
               style={styles.avatar}
               testID="home-avatar"
-              accessibilityLabel="Your profile"
+              accessibilityLabel="Account settings"
             >
               <Text style={styles.avatarText}>
                 {(user?.name || "?").charAt(0).toUpperCase()}

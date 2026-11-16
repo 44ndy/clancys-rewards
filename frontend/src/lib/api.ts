@@ -11,8 +11,18 @@ export type User = {
   name: string;
   role: Role;
   picture?: string | null;
+  phone?: string | null;
+  /** "google" accounts have no password of their own and their email belongs to Google. */
+  auth_provider?: "email" | "google";
   active?: boolean;
   created_at: string;
+};
+
+export type ProfileUpdate = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  current_password?: string;
 };
 
 export type Restaurant = {
@@ -119,7 +129,21 @@ export type DashboardData = {
   week_redemptions: number;
   daily_visits_series: { date: string; count: number }[];
   top_rewards: { name: string; count: number }[];
+  // Added with the charts; optional so an older server never breaks the screen.
+  prev_week_visits?: number;
+  visits_14d?: { date: string; count: number }[];
+  /** 24 slots, index = hour of the day in Cork time. */
+  visits_by_hour_30d?: number[];
+  /** 7 slots, Monday first. */
+  visits_by_weekday_8w?: number[];
+  new_members_weekly?: { week_start: string; count: number }[];
+  customer_mix_30d?: { first_visit: number; returning: number };
+  reward_progress?: { ready: number; one_away: number; collecting: number };
+  reward_threshold?: number | null;
 };
+
+/** Public pages served by the backend (privacy policy, terms). */
+export const legalUrl = (page: "privacy" | "terms") => `${BASE}/${page}`;
 
 /** Turn a stored image path into something an <Image> can fetch. */
 export function imageUrl(u?: string | null): string | undefined {
@@ -178,6 +202,9 @@ export const api = {
     request<{ token: string; user: User }>("/auth/google",
       { method: "POST", body: { id_token, nonce }, auth: false }),
   me: () => request<User>("/auth/me"),
+  updateMe: (b: ProfileUpdate) => request<User>("/auth/me", { method: "PATCH", body: b }),
+  changePassword: (current_password: string, new_password: string) =>
+    request<{ status: string }>("/auth/password", { method: "POST", body: { current_password, new_password } }),
   logout: () => request("/auth/logout", { method: "POST" }),
 
   // restaurant

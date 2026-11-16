@@ -14,7 +14,8 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_auth_requests
-import os, logging, uuid, secrets, time, bcrypt, jwt, httpx, asyncio, json
+from zoneinfo import ZoneInfo
+import os, re, logging, uuid, secrets, time, bcrypt, jwt, httpx, asyncio, json
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -131,6 +132,7 @@ def _ip_de(request: Optional[Request]) -> str:
 
 
 # ---------- Helpers ----------
+TZ_LOCAL = ZoneInfo("Europe/Dublin")   # la hora del pub, para gráficos y "hoy"
 def now_utc() -> datetime: return datetime.now(timezone.utc)
 def gen_id(p="id") -> str: return f"{p}_{uuid.uuid4().hex[:12]}"
 def hash_password(pw: str) -> str: return bcrypt.hashpw(pw.encode(), bcrypt.gensalt()).decode()
@@ -251,6 +253,15 @@ class StaffUpdateIn(BaseModel):
     active: Optional[bool] = None
 class RegisterPushBody(BaseModel):
     platform: str; device_token: str
+class ProfileUpdateIn(BaseModel):
+    # Todo opcional: la app manda solo lo que la persona cambió.
+    name: Optional[str] = Field(default=None, max_length=60)
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = Field(default=None, max_length=24)
+    current_password: Optional[str] = Field(default=None, max_length=128)
+class PasswordChangeIn(BaseModel):
+    current_password: str = Field(max_length=128)
+    new_password: str = Field(min_length=8, max_length=128)
 
 # ---------- App ----------
 app = FastAPI(title="Clancy's Loyalty + Admin")
@@ -269,6 +280,10 @@ def _user_payload(u: dict) -> dict:
         "name": u["name"],
         "role": u.get("role", "customer"),
         "picture": u.get("picture"),
+        "phone": u.get("phone"),
+        # "google" = la cuenta entra con Google: no tiene contraseña propia y el
+        # correo lo maneja Google, así que Ajustes no deja cambiar ninguno de los dos.
+        "auth_provider": u.get("auth_provider", "email"),
         "active": u.get("active", True),
         "created_at": u["created_at"].isoformat() if isinstance(u.get("created_at"), datetime) else u.get("created_at"),
     }
@@ -329,7 +344,9 @@ async def auth_google(body: GoogleLoginIn):
     existing = await db.users.find_one({"email": email}, {"_id": 0})
     if existing:
         uid = existing["user_id"]
-        await db.users.update_one({"user_id": uid}, {"$set": {"name": name, "picture": pic}})
+        # Si la persona ya se puso otro nombre en Ajustes, Google no se lo pisa.
+        cambios = {"picture": pic} if existing.get("name_locked") else {"name": name, "picture": pic}
+        await db.users.update_one({"user_id": uid}, {"$set": cambios})
     else:
         uid = gen_id("usr")
         await db.users.insert_one({
@@ -352,6 +369,86 @@ async def auth_logout(authorization: Optional[str] = Header(None)):
     if authorization and authorization.lower().startswith("bearer "):
         token = authorization.split(" ", 1)[1].strip()
         await db.user_sessions.delete_one({"session_token": token})
+    return {"status": "ok"}
+
+# ---------- AJUSTES DE LA CUENTA ----------
+# Teléfono: dígitos con espacios, guiones o paréntesis, y un + adelante si es
+# internacional (+353 87 123 4567). Entre 7 y 15 dígitos, como manda E.164.
+_TELEFONO_OK = re.compile(r"^\+?[0-9 ()\-]{7,22}$")
+PASSWORD_MAX_INTENTOS, PASSWORD_VENTANA_S = 5, 900
+
+def _normalizar_telefono(raw: str) -> Optional[str]:
+    tel = " ".join(raw.split())
+    if not tel:
+        return None
+    digitos = sum(c.isdigit() for c in tel)
+    if not _TELEFONO_OK.match(tel) or not 7 <= digitos <= 15:
+        raise HTTPException(400, "Please enter a valid phone number")
+    return tel
+
+async def _confirmar_password(u: dict, actual: Optional[str], request: Optional[Request]) -> None:
+    """Pide la contraseña actual antes de algo delicado (correo o contraseña nueva).
+    Va con el mismo freno que el login, para que no sirva para adivinarla."""
+    if not u.get("password_hash"):
+        raise HTTPException(400, "This account signs in with Google")
+    if not actual:
+        raise HTTPException(400, "Please enter your current password")
+    clave = f"pw:{_ip_de(request)}:{u['user_id']}"
+    _rate_frenar(clave, PASSWORD_MAX_INTENTOS, PASSWORD_VENTANA_S)
+    if not verify_password(actual, u["password_hash"]):
+        _rate_anotar(clave, PASSWORD_VENTANA_S)
+        raise HTTPException(401, "Your current password is not correct")
+    _rate_limpiar(clave)
+
+@api.patch("/auth/me")
+async def auth_update_me(body: ProfileUpdateIn, request: Request, user: dict = Depends(get_current_user)):
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    cambios: dict = {}
+    quitar: dict = {}
+
+    if body.name is not None:
+        nombre = " ".join(body.name.split())
+        if not nombre:
+            raise HTTPException(400, "Your name can't be empty")
+        if nombre != u.get("name"):
+            cambios.update({"name": nombre, "name_locked": True})
+
+    if body.phone is not None:
+        tel = _normalizar_telefono(body.phone)
+        if tel != u.get("phone"):
+            if tel: cambios["phone"] = tel
+            else: quitar["phone"] = ""
+
+    if body.email is not None:
+        correo = body.email.lower()
+        if correo != u["email"]:
+            if u.get("auth_provider") == "google":
+                raise HTTPException(400, "Your email is managed by your Google account")
+            await _confirmar_password(u, body.current_password, request)
+            if await db.users.find_one({"email": correo}, {"_id": 1}):
+                raise HTTPException(409, "That email is already in use")
+            cambios["email"] = correo
+
+    if cambios or quitar:
+        cambios["updated_at"] = now_utc()
+        op: dict = {"$set": cambios}
+        if quitar: op["$unset"] = quitar
+        await db.users.update_one({"user_id": u["user_id"]}, op)
+        campos = sorted(k for k in [*cambios, *quitar] if k not in ("updated_at", "name_locked"))
+        await log_activity(u["user_id"], "profile_updated", meta={"fields": campos})
+
+    fresco = await db.users.find_one({"user_id": u["user_id"]}, {"_id": 0, "password_hash": 0})
+    return _user_payload(fresco)
+
+@api.post("/auth/password")
+async def auth_change_password(body: PasswordChangeIn, request: Request, user: dict = Depends(get_current_user)):
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    await _confirmar_password(u, body.current_password, request)
+    if verify_password(body.new_password, u["password_hash"]):
+        raise HTTPException(400, "The new password must be different")
+    await db.users.update_one({"user_id": u["user_id"]},
+        {"$set": {"password_hash": hash_password(body.new_password), "updated_at": now_utc()}})
+    await log_activity(u["user_id"], "password_changed")
     return {"status": "ok"}
 
 # ---------- RESTAURANT INFO ----------
@@ -567,29 +664,77 @@ admin = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 # ---------- DASHBOARD ----------
 @admin.get("/dashboard")
 async def admin_dashboard():
-    today = now_utc().replace(hour=0, minute=0, second=0, microsecond=0)
-    week_ago = today - timedelta(days=7)
+    # Los días y las horas se cuentan en hora de Irlanda: "hoy" empieza a la
+    # medianoche de Cork, no a la de Greenwich (en verano hay una hora de diferencia).
+    ahora_local = now_utc().astimezone(TZ_LOCAL)
+    hoy_local = ahora_local.replace(hour=0, minute=0, second=0, microsecond=0)
+    today = hoy_local.astimezone(timezone.utc)
+    week_ago = today - timedelta(days=6)          # hoy + los 6 días anteriores
+    prev_week = week_ago - timedelta(days=7)
     [total_customers, active_members, redemptions, today_visits,
      week_visits, week_redemptions] = await _gather_metrics(today, week_ago)
+    prev_week_visits = await db.visit_log.count_documents(
+        {"created_at": {"$gte": prev_week, "$lt": week_ago}})
 
-    # daily visits last 7d
-    pipeline = [
-        {"$match": {"created_at": {"$gte": week_ago}}},
-        {"$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$created_at"}},
-                    "count": {"$sum": 1}}},
-        {"$sort": {"_id": 1}},
-    ]
-    daily = await db.visit_log.aggregate(pipeline).to_list(7)
-    daily_series = [{"date": d["_id"], "count": d["count"]} for d in daily]
+    # Una sola lectura de las visitas de las últimas 8 semanas; los gráficos se
+    # arman en Python para no depender de zonas horarias dentro de Mongo.
+    desde_8sem = today - timedelta(days=55)
+    visitas = [_a_local(v["created_at"]) async for v in db.visit_log.find(
+        {"created_at": {"$gte": desde_8sem}}, {"_id": 0, "created_at": 1, "user_id": 1})]
 
-    # top rewards last 30d
-    pipeline2 = [
-        {"$match": {"redeemed_at": {"$gte": today - timedelta(days=30)}}},
+    dias14 = [(hoy_local - timedelta(days=13 - i)).date() for i in range(14)]
+    por_dia = {d: 0 for d in dias14}
+    por_hora = [0] * 24
+    por_dia_semana = [0] * 7                       # 0 = lunes
+    hace30 = hoy_local - timedelta(days=29)
+    for v in visitas:
+        if v.date() in por_dia: por_dia[v.date()] += 1
+        por_dia_semana[v.weekday()] += 1
+        if v >= hace30: por_hora[v.hour] += 1
+    visits_14d = [{"date": d.isoformat(), "count": por_dia[d]} for d in dias14]
+    daily_series = visits_14d[-7:]
+
+    # Socios nuevos por semana (semanas de lunes a domingo, la última es la actual).
+    lunes = (hoy_local - timedelta(days=hoy_local.weekday()))
+    semanas = [lunes - timedelta(weeks=7 - i) for i in range(8)]
+    nuevos = [0] * 8
+    async for u in db.users.find({"role": "customer", "created_at": {"$gte": semanas[0].astimezone(timezone.utc)}},
+                                 {"_id": 0, "created_at": 1}):
+        c = _a_local(u["created_at"])
+        idx = (c.date() - semanas[0].date()).days // 7
+        if 0 <= idx < 8: nuevos[idx] += 1
+    new_members_weekly = [{"week_start": w.date().isoformat(), "count": n} for w, n in zip(semanas, nuevos)]
+
+    # Quién viene: de los clientes que vinieron en los últimos 30 días, cuántos
+    # vinieron por primera vez en ese tiempo y cuántos ya eran de la casa.
+    ids_30 = list({d["user_id"] async for d in db.visit_log.find(
+        {"created_at": {"$gte": hace30.astimezone(timezone.utc)}}, {"_id": 0, "user_id": 1})})
+    primera_vez = 0
+    if ids_30:
+        primeras = await db.visit_log.aggregate([
+            {"$match": {"user_id": {"$in": ids_30}}},
+            {"$group": {"_id": "$user_id", "first": {"$min": "$created_at"}}},
+        ]).to_list(len(ids_30))
+        primera_vez = sum(1 for p in primeras if _a_local(p["first"]) >= hace30)
+    customer_mix = {"first_visit": primera_vez, "returning": len(ids_30) - primera_vez}
+
+    # Qué tan cerca están los socios de su próximo premio.
+    umbrales = sorted([r["visits_required"] async for r in db.rewards.find(
+        {"active": True}, {"_id": 0, "visits_required": 1})])
+    progress = {"ready": 0, "one_away": 0, "collecting": 0}
+    if umbrales:
+        minimo = umbrales[0]
+        async for m in db.memberships.find({"lifetime_visits": {"$gt": 0}}, {"_id": 0, "visits": 1}):
+            faltan = minimo - (m.get("visits") or 0)
+            progress["ready" if faltan <= 0 else "one_away" if faltan == 1 else "collecting"] += 1
+
+    # Premios más canjeados en los últimos 30 días
+    top_rewards = await db.redemptions.aggregate([
+        {"$match": {"redeemed_at": {"$gte": hace30.astimezone(timezone.utc)}}},
         {"$group": {"_id": "$reward_name", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
         {"$limit": 5},
-    ]
-    top_rewards = await db.redemptions.aggregate(pipeline2).to_list(5)
+    ]).to_list(5)
 
     return {
         "total_customers": total_customers,
@@ -597,10 +742,24 @@ async def admin_dashboard():
         "rewards_redeemed_total": redemptions,
         "today_visits": today_visits,
         "week_visits": week_visits,
+        "prev_week_visits": prev_week_visits,
         "week_redemptions": week_redemptions,
         "daily_visits_series": daily_series,
+        "visits_14d": visits_14d,
+        "visits_by_hour_30d": por_hora,
+        "visits_by_weekday_8w": por_dia_semana,
+        "new_members_weekly": new_members_weekly,
+        "customer_mix_30d": customer_mix,
+        "reward_progress": progress,
+        "reward_threshold": umbrales[0] if umbrales else None,
         "top_rewards": [{"name": t["_id"], "count": t["count"]} for t in top_rewards],
+        "timezone": str(TZ_LOCAL),
     }
+
+def _a_local(dt: datetime) -> datetime:
+    """Mongo devuelve las fechas en UTC sin zona; las paso a hora de Cork."""
+    if dt.tzinfo is None: dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(TZ_LOCAL)
 
 async def _gather_metrics(today, week_ago):
     return [
