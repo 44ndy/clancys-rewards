@@ -6,6 +6,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Header, BackgroundTasks, 
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
+from starlette.responses import FileResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional, Literal, Any
@@ -890,6 +891,23 @@ async def shutdown():
     await push_client.aclose(); client.close()
 
 app.mount("/api/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+# Páginas públicas que pide Google para publicar el inicio de sesión con Google
+# (página de inicio, política de privacidad y términos). Son HTML estático.
+LEGAL_DIR = ROOT_DIR / "legal"
+
+@app.get("/", include_in_schema=False)
+async def legal_home():
+    return FileResponse(LEGAL_DIR / "index.html", media_type="text/html")
+
+@app.get("/privacy", include_in_schema=False)
+async def legal_privacy():
+    return FileResponse(LEGAL_DIR / "privacy.html", media_type="text/html")
+
+@app.get("/terms", include_in_schema=False)
+async def legal_terms():
+    return FileResponse(LEGAL_DIR / "terms.html", media_type="text/html")
+
 app.include_router(api)
 _origenes = CORS_ORIGINS or CORS_FALLBACK
 if not CORS_ORIGINS:
