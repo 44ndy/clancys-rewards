@@ -10,7 +10,6 @@ import {
   type ReactNode,
 } from "react";
 import { Platform } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
 import * as Notifications from "expo-notifications";
 
 import { api, tokenStore, type User } from "@/src/lib/api";
@@ -20,7 +19,8 @@ type AuthCtx = {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
+  /** true si la persona quedó con sesión iniciada; false si canceló o si la web se fue a Google. */
+  signInWithGoogle: () => Promise<boolean>;
   googleReady: boolean;
   /** Set when a Google redirect came back but the sign-in could not be completed. */
   googleError: string | null;
@@ -34,10 +34,32 @@ const Ctx = createContext<AuthCtx | null>(null);
 // Real Google OAuth Client IDs (create at https://console.cloud.google.com/apis/credentials).
 // Talks to Google directly — no third-party auth proxy, no "secured by X" badge.
 const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || "";
-const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || GOOGLE_WEB_CLIENT_ID;
-const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || GOOGLE_WEB_CLIENT_ID;
 
-const GOOGLE_PLACEHOLDER_ID = "not-configured.apps.googleusercontent.com";
+// En Android e iOS se usa el inicio de sesión nativo de Google (selector de
+// cuentas del sistema). Se configura con el client ID *web*: así Google devuelve
+// un id_token cuyo destinatario es ese ID, que es el que verifica el backend.
+// El client ID de Android no va en el código: Google lo reconoce por el nombre
+// del paquete y la huella SHA-1 con que está firmada la app.
+// Si el módulo nativo no está (por ejemplo en Expo Go), el botón de Google se
+// oculta en vez de cerrar la app al abrirla.
+type NativeGoogleModule = typeof import("@react-native-google-signin/google-signin");
+const NativeGoogle: NativeGoogleModule | null = (() => {
+  if (Platform.OS === "web") return null;
+  try {
+    return require("@react-native-google-signin/google-signin") as NativeGoogleModule;
+  } catch (e) {
+    console.log("google signin module unavailable:", e);
+    return null;
+  }
+})();
+if (NativeGoogle && GOOGLE_WEB_CLIENT_ID) {
+  try {
+    NativeGoogle.GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID });
+  } catch (e) {
+    console.log("google signin configure skipped:", e);
+  }
+}
+
 const GOOGLE_NONCE_KEY = "clancys_google_nonce";
 const GOOGLE_STATE_KEY = "clancys_google_state";
 
@@ -79,16 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const registeredPushFor = useRef<string | null>(null);
   const [googleError, setGoogleError] = useState<string | null>(null);
-
-  // expo-auth-session lanza un error al renderizar si el client ID de la
-  // plataforma viene vacío, y en una build nativa eso cierra la app al abrirla.
-  // Sin Google configurado se pasa un valor de relleno: el botón queda oculto
-  // (googleReady es false) y el flujo nunca se inicia.
-  const [, , promptGoogleAsync] = Google.useIdTokenAuthRequest({
-    webClientId: GOOGLE_WEB_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
-    iosClientId: GOOGLE_IOS_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
-    androidClientId: GOOGLE_ANDROID_CLIENT_ID || GOOGLE_PLACEHOLDER_ID,
-  });
 
   // restore session on mount
   useEffect(() => {
@@ -145,9 +157,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Web: full-page redirect straight to accounts.google.com (see the useEffect below for the
   // return leg). No popup — browsers kill window.open() once any await happens between the
   // click and the call (expo-auth-session's web popup hits exactly that on every browser),
-  // so a real redirect is the reliable option here. Native keeps the expo-auth-session flow,
-  // which opens a proper system browser sheet and isn't subject to that popup timing rule.
-  const signInWithGoogle = useCallback(async () => {
+  // so a real redirect is the reliable option here. Native uses Google's own sign-in SDK,
+  // which shows the system account picker instead of a browser.
+  const signInWithGoogle = useCallback(async (): Promise<boolean> => {
     if (!GOOGLE_WEB_CLIENT_ID) {
       throw new Error("Google sign-in isn't set up yet (missing EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID).");
     }
@@ -169,19 +181,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         prompt: "select_account",
       });
       window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-      return; // navigating away — nothing else to do here
+      return false; // navigating away — nothing else to do here
     }
-    const result = await promptGoogleAsync();
-    if (result.type === "dismiss" || result.type === "cancel" || result.type === "locked") return;
-    if (result.type !== "success") {
-      throw new Error((result as { error?: { message?: string } }).error?.message || "Google sign-in failed");
+    if (!NativeGoogle) throw new Error("Google sign-in isn't available on this device.");
+    const { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } = NativeGoogle;
+    let idToken: string | null = null;
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const result = await GoogleSignin.signIn();
+      if (!isSuccessResponse(result)) return false; // the guest closed the account picker
+      idToken = result.data.idToken;
+    } catch (e) {
+      if (isErrorWithCode(e)) {
+        if (e.code === statusCodes.SIGN_IN_CANCELLED || e.code === statusCodes.IN_PROGRESS) return false;
+        if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          throw new Error("This phone needs Google Play Services to sign in with Google.");
+        }
+      }
+      throw new Error("Google sign-in failed. Please try again or use your email.");
     }
-    const idToken = result.params?.id_token;
-    if (!idToken) throw new Error("Google didn't return an id_token");
+    if (!idToken) throw new Error("Google didn't return a sign-in token. Please try again.");
     const r = await api.googleLogin(idToken);
     await tokenStore.set(r.token);
     setUser(r.user);
-  }, [promptGoogleAsync]);
+    return true;
+  }, []);
 
   // Web: finish the sign-in Google redirected back from.
   //
@@ -233,6 +257,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await tokenStore.clear();
     setUser(null);
     registeredPushFor.current = null;
+    // Forget the Google account too, so the next sign-in shows the account picker.
+    if (NativeGoogle && GOOGLE_WEB_CLIENT_ID) {
+      try {
+        await NativeGoogle.GoogleSignin.signOut();
+      } catch {}
+    }
   }, []);
 
   const refresh = useCallback(async () => {
@@ -244,7 +274,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearGoogleError = useCallback(() => setGoogleError(null), []);
 
-  const googleReady = !!GOOGLE_WEB_CLIENT_ID;
+  const googleReady = !!GOOGLE_WEB_CLIENT_ID && (Platform.OS === "web" || !!NativeGoogle);
 
   const value = useMemo(
     () => ({ user, loading, signIn, signUp, signInWithGoogle, googleReady, googleError, clearGoogleError, signOut, refresh }),

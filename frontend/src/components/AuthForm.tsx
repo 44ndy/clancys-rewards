@@ -79,8 +79,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
     clearGoogleError();
     setSubmitting(true);
     try {
-      await signInWithGoogle();
-      router.replace("/");
+      // Solo se navega si de verdad inició sesión: si la persona cierra el
+      // selector de cuentas, se queda en esta pantalla.
+      if (await signInWithGoogle()) router.replace("/");
     } catch (e: any) {
       setError(e?.message || "Google sign-in failed.");
     } finally {

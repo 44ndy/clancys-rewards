@@ -10,13 +10,15 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "https://clancys-api.onrender.com"
+        "EXPO_PUBLIC_BACKEND_URL": "https://clancys-api.onrender.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "390940959360-oaumbumtk794eck1rdku7rl5njh6enqj.apps.googleusercontent.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "https://clancys-api.onrender.com"
+        "EXPO_PUBLIC_BACKEND_URL": "https://clancys-api.onrender.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "390940959360-oaumbumtk794eck1rdku7rl5njh6enqj.apps.googleusercontent.com"
       }
     }
   },
