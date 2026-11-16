@@ -718,9 +718,10 @@ async def admin_dashboard():
         primera_vez = sum(1 for p in primeras if _a_local(p["first"]) >= hace30)
     customer_mix = {"first_visit": primera_vez, "returning": len(ids_30) - primera_vez}
 
-    # Qué tan cerca están los socios de su próximo premio.
+    # Qué tan cerca están los socios del primer premio por visitas. El de
+    # cumpleaños no cuenta: vale con una visita y no dice nada de la constancia.
     umbrales = sorted([r["visits_required"] async for r in db.rewards.find(
-        {"active": True}, {"_id": 0, "visits_required": 1})])
+        {"active": True, "reward_type": {"$ne": "birthday"}}, {"_id": 0, "visits_required": 1})])
     progress = {"ready": 0, "one_away": 0, "collecting": 0}
     if umbrales:
         minimo = umbrales[0]

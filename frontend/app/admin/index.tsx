@@ -54,7 +54,8 @@ function Dashboard({ data }: { data: DashboardData }) {
     const last = i === series.length - 1;
     return {
       key: d.date,
-      label: last ? "Today" : String(dt.getDate()),
+      // Every other day, counting back from today, so "Today" has room.
+      label: last ? "Today" : (series.length - 1 - i) % 2 === 0 ? String(dt.getDate()) : "",
       long: `${last ? "Today" : DAY[dt.getDay()]} ${dt.getDate()} ${MONTH[dt.getMonth()]}`,
       value: d.count,
       strong: last,
@@ -63,7 +64,7 @@ function Dashboard({ data }: { data: DashboardData }) {
   const daysTotal = series.reduce((s, d) => s + d.count, 0);
   const busiestDay = series.reduce((b, d) => (d.count > b.count ? d : b), series[0] ?? { date: "", count: 0 });
   const daysCaption = daysTotal
-    ? `${daysTotal} ${daysTotal === 1 ? "visit" : "visits"} · best day ${fmtDayShort(busiestDay.date)} with ${busiestDay.count}. Tap a bar for its number.`
+    ? `${daysTotal} ${daysTotal === 1 ? "visit" : "visits"} · best day ${fmtDayShort(busiestDay.date)} (${busiestDay.count}). Tap a bar to see its number.`
     : "";
 
   // ── Hours of the day ───────────────────────────────────────────────────────
@@ -88,7 +89,8 @@ function Dashboard({ data }: { data: DashboardData }) {
   // ── Days of the week ───────────────────────────────────────────────────────
   const weekdays = data.visits_by_weekday_8w ?? [];
   const weekdaysTotal = weekdays.reduce((s, n) => s + n, 0);
-  const peakWeekday = weekdays.indexOf(Math.max(...(weekdays.length ? weekdays : [0])));
+  const weekdayMax = Math.max(0, ...weekdays);
+  const busiestDays = WEEK_MON_FIRST_LONG.filter((_, i) => weekdays[i] === weekdayMax);
 
   // ── New members ────────────────────────────────────────────────────────────
   const weeks = data.new_members_weekly ?? [];
@@ -148,7 +150,9 @@ function Dashboard({ data }: { data: DashboardData }) {
 
       <ChartCard title="Busiest days" period="Last 8 weeks" empty={!weekdaysTotal && NOTHING_YET} testID="chart-weekdays">
         <Text style={styles.caption}>
-          {WEEK_MON_FIRST_LONG[peakWeekday]} is the busiest day of the week.
+          {busiestDays.length === 1
+            ? `${busiestDays[0]} is the busiest day of the week.`
+            : `${busiestDays.slice(0, -1).join(", ")} and ${busiestDays[busiestDays.length - 1]} are the busiest days.`}
         </Text>
         <BarList rows={weekdays.map((n, i) => ({ key: WEEK_MON_FIRST[i], label: WEEK_MON_FIRST_LONG[i], value: n }))} />
       </ChartCard>
@@ -249,7 +253,7 @@ function parseDay(iso: string) {
 
 function fmtDayShort(iso: string) {
   const dt = parseDay(iso);
-  return `${DAY_LONG[dt.getDay()]} ${dt.getDate()}`;
+  return `${DAY_LONG[dt.getDay()]} ${dt.getDate()} ${MONTH[dt.getMonth()]}`;
 }
 
 function fmtHour(h: number) {

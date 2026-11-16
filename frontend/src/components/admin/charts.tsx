@@ -15,6 +15,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { palette, radii, spacing, type } from "@/src/lib/theme";
 
+const GAP = 3; // between bars, and used again to line the labels up
+
 export const CHART = {
   green: "#1A7A4C",
   greenActive: "#073A24",
@@ -52,6 +54,7 @@ export function BarChart({
   testID?: string;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [width, setWidth] = useState(0);
   const max = Math.max(1, ...data.map((d) => d.value));
   const peakKey = data.reduce((best, d) => (d.value > best.value ? d : best), data[0] ?? { key: "", value: 0 }).key;
   const picked = data.find((d) => d.key === selected);
@@ -99,19 +102,27 @@ export function BarChart({
         })}
       </View>
       <View style={styles.baseline} />
-      <View style={styles.labels}>
-        {data.map((d) => (
-          <View key={d.key} style={styles.labelCol}>
-            {d.label ? (
-              <Text
-                style={[styles.axisLabel, d.strong && styles.axisLabelStrong]}
-                numberOfLines={1}
-              >
-                {d.label}
-              </Text>
-            ) : null}
-          </View>
-        ))}
+      {/* Labels sit centred under their bar but may be wider than it ("10pm",
+          "Today"), so they're placed by hand and kept inside the card. */}
+      <View style={styles.labels} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+        {width > 0
+          ? data.map((d, i) => {
+              if (!d.label) return null;
+              const col = (width - GAP * (data.length - 1)) / data.length;
+              const center = i * (col + GAP) + col / 2;
+              const w = Math.ceil(d.label.length * 6.4) + 4;
+              const left = Math.min(Math.max(center - w / 2, 0), width - w);
+              return (
+                <Text
+                  key={d.key}
+                  style={[styles.axisLabel, { left, width: w }, d.strong && styles.axisLabelStrong]}
+                  numberOfLines={1}
+                >
+                  {d.label}
+                </Text>
+              );
+            })
+          : null}
       </View>
     </View>
   );
@@ -245,14 +256,13 @@ const styles = StyleSheet.create({
   readout: { ...type.bodySm, color: palette.textSecondary, minHeight: 19 },
   readoutStrong: { fontFamily: type.bodyMedium.fontFamily, color: palette.textPrimary },
 
-  plot: { flexDirection: "row", alignItems: "flex-end", gap: 3, paddingTop: 4 },
+  plot: { flexDirection: "row", alignItems: "flex-end", gap: GAP, paddingTop: 4 },
   col: { flex: 1, height: "100%", alignItems: "center", justifyContent: "flex-end" },
   bar: { width: "78%", maxWidth: 30, borderTopLeftRadius: 4, borderTopRightRadius: 4 },
   peak: { ...type.mono, fontSize: 10.5, color: palette.textPrimary, marginBottom: 3 },
   baseline: { height: StyleSheet.hairlineWidth, backgroundColor: CHART.baseline },
-  labels: { flexDirection: "row", gap: 3, marginTop: 5 },
-  labelCol: { flex: 1, alignItems: "center" },
-  axisLabel: { ...type.mono, fontSize: 9.5, color: palette.textMuted, width: 44, textAlign: "center" },
+  labels: { height: 15, marginTop: 5 },
+  axisLabel: { ...type.mono, position: "absolute", top: 0, fontSize: 9.5, color: palette.textMuted, textAlign: "center" },
   axisLabelStrong: { color: palette.textPrimary, fontWeight: "700" },
 
   hRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },

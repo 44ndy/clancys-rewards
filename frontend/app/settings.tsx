@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
 
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: 60 },
   section: { marginTop: spacing.lg },
-  sectionTitle: { ...type.eyebrow, fontSize: 10.5, color: palette.goldOnLight, marginBottom: spacing.sm, marginLeft: 4 },
+  sectionTitle: { ...type.eyebrow, textTransform: "uppercase", fontSize: 10.5, color: palette.goldOnLight, marginBottom: spacing.sm, marginLeft: 4 },
   sectionBody: { padding: spacing.md, gap: spacing.md },
 
   field: { gap: 6 },
