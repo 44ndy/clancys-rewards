@@ -25,7 +25,7 @@ La administración del local participa como referente del negocio para validar r
 
 ## Arquitectura
 
-Arquitectura cliente-servidor en tres capas. El detalle está en [Arquitectura](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Arquitectura.md) y el modelo de datos en [Modelo de datos](Fase%202/Evidencias%20de%20sistema/Base%20de%20datos/Modelo_de_datos.md). Para el despliegue se eligió Render (API), MongoDB Atlas (base de datos) y Cloudflare R2 (imágenes), todo en la Unión Europea, por ser la opción que mejor escala para el modelo de negocio; la comparación y los costos están en [Plataforma de despliegue](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Plataforma_de_despliegue.md).
+Arquitectura cliente-servidor en tres capas. El detalle está en [Arquitectura](Fase%202/Evidencias%20Proyecto/Evidencias%20de%20documentaci%C3%B3n/Arquitectura.md) y el modelo de datos en [Modelo de datos](Fase%202/Evidencias%20Proyecto/Evidencias%20de%20sistema/Base%20de%20datos/Modelo_de_datos.md). Para el despliegue se eligió Render (API), MongoDB Atlas (base de datos) y Cloudflare R2 (imágenes), todo en la Unión Europea, por ser la opción que mejor escala para el modelo de negocio; la comparación y los costos están en [Plataforma de despliegue](Fase%202/Evidencias%20Proyecto/Evidencias%20de%20documentaci%C3%B3n/Plataforma_de_despliegue.md).
 
 ```mermaid
 flowchart LR
@@ -36,7 +36,7 @@ flowchart LR
 
 ## Metodología
 
-Se usa Scrum en sprints de dos semanas, porque permite entregar avances funcionales, recibir retroalimentación de la docente y del local en cada revisión, y ajustar el sprint siguiente. El backlog se ordena dejando primero lo que impide publicar la app (seguridad y despliegue), después lo que afecta al usuario y al final lo visual. Cada sprint es un [milestone](https://github.com/44ndy/clancys-rewards/milestones) y cada tarea un issue. Más detalle en [Metodología y backlog](Fase%202/Evidencias%20de%20documentaci%C3%B3n/Metodologia_y_backlog.md).
+Se usa Scrum en sprints de dos semanas, porque permite entregar avances funcionales, recibir retroalimentación de la docente y del local en cada revisión, y ajustar el sprint siguiente. El backlog se ordena dejando primero lo que impide publicar la app (seguridad y despliegue), después lo que afecta al usuario y al final lo visual. Cada sprint es un [milestone](https://github.com/44ndy/clancys-rewards/milestones) y cada tarea un issue. Más detalle en [Metodología y backlog](Fase%202/Evidencias%20Proyecto/Evidencias%20de%20documentaci%C3%B3n/Metodologia_y_backlog.md).
 
 | Sprint | Fechas (2026) | Meta | Estado |
 |---|---|---|---|
@@ -91,13 +91,15 @@ clancys-rewards/
 │   └── Evidencias Grupales/           1.4 Formativa, 1.5 Definición del proyecto, presentación, Carta Gantt y planilla
 ├── Fase 2/
 │   ├── Evidencias Individuales/       2.1 Diario de reflexión, 2.2 Autoevaluación de avance
-│   ├── Evidencias Grupales/           2.3 Formativa, 2.4 Informe de avance y planillas
-│   ├── Evidencias Proyecto/           Presentación del avance
-│   ├── Evidencias de documentación/   Matriz de requisitos (Excel), arquitectura, metodología y backlog
-│   └── Evidencias de sistema/
-│       ├── Aplicación/                Capturas de la app funcionando
-│       └── Base de datos/             Modelo de datos
-└── Fase 3/                            Presentación final, diario y autoevaluación
+│   ├── Evidencias Grupales/           2.3 Formativa, 2.4 Informe de avance, 2.6 Informe final, presentación y planillas
+│   └── Evidencias Proyecto/
+│       ├── Evidencias de documentación/   Matriz de requisitos (Excel), arquitectura, metodología y backlog
+│       └── Evidencias de sistema/
+│           ├── Aplicación/                Capturas de la app funcionando
+│           └── Base de datos/             Modelo de datos
+└── Fase 3/
+    ├── Evidencias Individuales/       3.1 Diario de reflexión, 3.2 Autoevaluación
+    └── Evidencias Grupales/           Presentación final, guion, rúbrica y planilla
 ```
 
 ## Evidencias por fase
@@ -106,13 +108,11 @@ clancys-rewards/
 |---|---|---|
 | 1 | Autoevaluación de competencias, diario y autoevaluación | `Fase 1/Evidencias Individuales/` |
 | 1 | Definición del Proyecto APT, presentación y Carta Gantt | `Fase 1/Evidencias Grupales/` |
-| 2 | Informe de avance (guía 2.4) | `Fase 2/Evidencias Grupales/` |
+| 2 | Informe de avance (guía 2.4), informe final (guía 2.6) y presentación | `Fase 2/Evidencias Grupales/` |
 | 2 | Diario de reflexión y autoevaluación de avance | `Fase 2/Evidencias Individuales/` |
-| 2 | Matriz de requisitos (Excel), arquitectura, plataforma de despliegue, metodología y plan de publicación en iOS | `Fase 2/Evidencias de documentación/` |
-| 2 | Capturas de la app y modelo de datos | `Fase 2/Evidencias de sistema/` |
-| 2 | Presentación del avance | `Fase 2/Evidencias Proyecto/` |
-| 3 | Presentación final y guion | `Fase 3/Evidencias Proyecto/` |
+| 2 | Matriz de requisitos (Excel), arquitectura, plataforma de despliegue, metodología y plan de publicación en iOS | `Fase 2/Evidencias Proyecto/Evidencias de documentación/` |
+| 2 | Capturas de la app y modelo de datos | `Fase 2/Evidencias Proyecto/Evidencias de sistema/` |
 | 3 | Diario de reflexión y autoevaluación | `Fase 3/Evidencias Individuales/` |
-| 3 | Rúbrica y planilla de evaluación | `Fase 3/Evidencias Grupales/` |
+| 3 | Presentación final, guion, rúbrica y planilla de evaluación | `Fase 3/Evidencias Grupales/` |
 
 La Carta Gantt se abre en [onlinegantt.com](https://www.onlinegantt.com) con la opción "Open .gantt file".
