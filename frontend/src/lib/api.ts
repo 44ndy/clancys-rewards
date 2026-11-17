@@ -67,6 +67,10 @@ export type Promotion = {
   banner_color?: string;
   valid_from?: string | null;
   valid_until?: string | null;
+  /** Free text such as "Every last Friday, 7pm". Shown in the details sheet. */
+  schedule?: string | null;
+  /** Longer text shown when a guest taps the card. */
+  details?: string | null;
   push_on_publish?: boolean;
   active: boolean;
 };

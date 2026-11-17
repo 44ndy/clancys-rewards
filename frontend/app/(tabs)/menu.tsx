@@ -36,6 +36,7 @@ import { gradients, palette, radii, spacing, type } from "@/src/lib/theme";
 import { api, imageUrl, type MenuItem, type MenuSection } from "@/src/lib/api";
 import { Grain } from "@/src/components/ui/Grain";
 import { PressableScale } from "@/src/components/ui/PressableScale";
+import { DetailSheet, type SheetContent } from "@/src/components/ui/DetailSheet";
 
 const enter = (i: number) =>
   FadeInDown.delay(Math.min(i, 8) * 45)
@@ -52,6 +53,7 @@ export default function Menu() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openDish, setOpenDish] = useState<MenuItem | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -165,7 +167,7 @@ export default function Menu() {
             </View>
           ) : (
             <Animated.View key={row.item.item_id} entering={enter(row.i)}>
-              <Dish item={row.item} />
+              <Dish item={row.item} onOpen={() => setOpenDish(row.item)} />
             </Animated.View>
           ),
         )}
@@ -174,16 +176,40 @@ export default function Menu() {
           Please tell your server about any allergies. All prices include VAT.
         </Text>
       </ScrollView>
+
+      <DetailSheet content={openDish ? dishSheet(openDish) : null} onClose={() => setOpenDish(null)} testID="dish-sheet" />
     </View>
   );
 }
 
+// The dish, large: the photo, the whole description and the price.
+function dishSheet(item: MenuItem): SheetContent {
+  const where = [item.category, item.course].filter(Boolean).join(" · ");
+  return {
+    key: item.item_id,
+    image: imageUrl(item.image_url),
+    color: palette.walnut,
+    eyebrow: where.toUpperCase(),
+    title: item.name,
+    chips: [{ icon: "pricetag-outline", text: `€${item.price.toFixed(2)}` }],
+    body: item.description || undefined,
+    rows: [{ icon: "information-circle-outline", label: "ALLERGIES", text: "Please tell your server about any allergies." }],
+  };
+}
+
 // ── One dish ─────────────────────────────────────────────────────────────────
 
-function Dish({ item }: { item: MenuItem }) {
+function Dish({ item, onOpen }: { item: MenuItem; onOpen: () => void }) {
   const src = imageUrl(item.image_url);
   return (
-    <View style={styles.row} testID={`menu-item-${item.item_id}`}>
+    <PressableScale
+      style={styles.row}
+      onPress={onOpen}
+      scaleTo={0.985}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.name}, €${item.price.toFixed(2)}. Show details`}
+      testID={`menu-item-${item.item_id}`}
+    >
       <Plate src={src} name={item.name} />
 
       <View style={styles.body}>
@@ -200,7 +226,7 @@ function Dish({ item }: { item: MenuItem }) {
           </Text>
         ) : null}
       </View>
-    </View>
+    </PressableScale>
   );
 }
 

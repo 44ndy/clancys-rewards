@@ -227,6 +227,9 @@ class RewardUpsertIn(BaseModel):
     active: bool = True
 class PromotionUpsertIn(BaseModel):
     title: str; description: str
+    # Lo que se ve al tocar la tarjeta en la app: cuándo es y más detalle.
+    schedule: Optional[str] = Field(default=None, max_length=120)
+    details: Optional[str] = Field(default=None, max_length=2000)
     image_url: Optional[str] = None
     banner_color: Optional[str] = "#0E5C3A"
     valid_from: Optional[datetime] = None

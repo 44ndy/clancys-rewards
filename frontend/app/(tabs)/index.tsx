@@ -20,6 +20,7 @@ import {
   Platform,
   RefreshControl,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   View,
@@ -41,6 +42,10 @@ import { ActionRow } from "@/src/components/ui/ActionRow";
 import { Grain } from "@/src/components/ui/Grain";
 import { PressableScale } from "@/src/components/ui/PressableScale";
 import { Surface } from "@/src/components/ui/Surface";
+import { DetailSheet, type SheetContent } from "@/src/components/ui/DetailSheet";
+
+const MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDate = (d: Date) => `${d.getDate()} ${MONTH[d.getMonth()]} ${d.getFullYear()}`;
 
 /** One orchestrated entrance. Memoised per delay so the builder isn't rebuilt on
  *  every render — an inline chain in JSX rebuilds it each time. */
@@ -56,6 +61,7 @@ export default function Home() {
   const { user } = useAuth();
   const { restaurant, loyalty, loading, refresh } = useRestaurant();
   const [promos, setPromos] = useState<Promotion[]>([]);
+  const [openPromo, setOpenPromo] = useState<Promotion | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const loadPromos = useCallback(async () => {
@@ -210,7 +216,12 @@ export default function Home() {
                   key={p.promotion_id}
                   style={[styles.promoCard, elevation.card]}
                   testID={`promo-${p.promotion_id}`}
-                  accessibilityLabel={p.title}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${p.title}. Show details`}
+                  onPress={() => {
+                    if (Platform.OS !== "web") Haptics.selectionAsync().catch(() => {});
+                    setOpenPromo(p);
+                  }}
                 >
                   {p.image_url ? (
                     <Image source={{ uri: imageUrl(p.image_url) }} style={styles.promoImg} />
@@ -223,6 +234,10 @@ export default function Home() {
                     style={StyleSheet.absoluteFill}
                   />
                   <Grain opacity={0.05} />
+                  {/* Says "there's more behind this card" without a word. */}
+                  <View style={styles.promoMore}>
+                    <Ionicons name="add" size={18} color={palette.ivory} />
+                  </View>
                   <View style={styles.promoText}>
                     <Text style={styles.promoTitle} numberOfLines={1}>
                       {p.title}
@@ -254,8 +269,64 @@ export default function Home() {
           </Surface>
         </Animated.View>
       </ScrollView>
+
+      <DetailSheet
+        content={openPromo ? promoSheet(openPromo) : null}
+        onClose={() => setOpenPromo(null)}
+        testID="promo-sheet"
+      />
     </View>
   );
+
+  // Everything the card had no room for: the whole text, when, where, and what
+  // a member does about it. Dates only show when they say something useful.
+  function promoSheet(p: Promotion): SheetContent {
+    const now = new Date();
+    const from = p.valid_from ? new Date(p.valid_from) : null;
+    const until = p.valid_until ? new Date(p.valid_until) : null;
+    const chips: SheetContent["chips"] = [];
+    if (from && from > now) chips.push({ icon: "calendar-outline", text: `Starts ${fmtDate(from)}` });
+    else chips.push({ icon: "sparkles-outline", text: "On now" });
+    if (until && until.getTime() - now.getTime() < 90 * 864e5) {
+      chips.push({ icon: "hourglass-outline", text: `Until ${fmtDate(until)}` });
+    }
+    const rows: NonNullable<SheetContent["rows"]> = [];
+    if (p.schedule) rows.push({ icon: "time-outline", label: "WHEN", text: p.schedule });
+    if (restaurant?.address) rows.push({ icon: "location-outline", label: "WHERE", text: restaurant.address });
+    rows.push({ icon: "qr-code-outline", label: "MEMBERS", text: "Show your QR pass when you come in and it counts as a visit." });
+    const house = restaurant?.name || "Clancy's";
+    return {
+      key: p.promotion_id,
+      image: imageUrl(p.image_url),
+      color: p.banner_color,
+      eyebrow: "WHAT'S ON",
+      title: p.title,
+      chips,
+      body: p.description,
+      extra: p.details || undefined,
+      rows,
+      actions: [
+        {
+          label: "Show QR Pass",
+          icon: "qr-code",
+          onPress: () => {
+            setOpenPromo(null);
+            router.push("/(tabs)/scan");
+          },
+          testID: "promo-sheet-qr",
+        },
+        {
+          label: "Share",
+          icon: "share-outline",
+          variant: "ghostLight",
+          onPress: () => {
+            Share.share({ message: `${p.title} at ${house}. ${p.description}` }).catch(() => {});
+          },
+          testID: "promo-sheet-share",
+        },
+      ],
+    };
+  }
 }
 
 function InfoRow({
@@ -333,6 +404,19 @@ const styles = StyleSheet.create({
   },
   promoImg: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
   promoText: { position: "absolute", bottom: 16, left: 16, right: 16 },
+  promoMore: {
+    position: "absolute",
+    top: 14,
+    right: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(11,8,5,0.42)",
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "rgba(245,239,226,0.35)",
+  },
   promoTitle: { ...type.h3, fontSize: 19, color: palette.ivory },
   promoDesc: { ...type.bodySm, fontSize: 12.5, lineHeight: 18, color: palette.textOnDarkMuted, marginTop: 3 },
 

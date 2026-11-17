@@ -11,13 +11,15 @@ import { Editor, type FieldDef } from "@/src/components/AdminEditor";
 const FIELDS: FieldDef[] = [
   { key: "title", label: "Title", type: "text" },
   { key: "description", label: "Description", type: "multiline" },
+  { key: "schedule", label: "When (e.g. Every last Friday, 7pm)", type: "text" },
+  { key: "details", label: "More details (shown when a guest taps the card)", type: "multiline" },
   { key: "image_url", label: "Photo", type: "image", hint: "Fills the card on the guest home screen." },
   { key: "banner_color", label: "Banner color (hex)", type: "text" },
   { key: "push_on_publish", label: "Push notify on save", type: "switch" },
   { key: "active", label: "Active", type: "switch" },
 ];
 
-const DEFAULT = { title: "", description: "", image_url: "", banner_color: "#0E5C3A", active: true, push_on_publish: false };
+const DEFAULT = { title: "", description: "", schedule: "", details: "", image_url: "", banner_color: "#0E5C3A", active: true, push_on_publish: false };
 
 export default function AdminPromotions() {
   const [items, setItems] = useState<Promotion[]>([]);
